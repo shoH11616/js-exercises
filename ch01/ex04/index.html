@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      let life = { answer: 42 };
+      console.log('最初のlife:', { ...life }); // lifeオブジェクトを複製してログに出力
+      life.answer = 0;
+      console.log('変更後のlife:', life);
+    </script>
+  </body>
+</html>
+
+<!-- JavaScriptを評価する際にconsole.log(life)が2かい実行されてしまうため
+lifeオブジェクトをログに出力する前にlifeオブジェクトを複製する。 -->
