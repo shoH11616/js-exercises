@@ -1,3 +1,4 @@
+// 修正後（ 参考: https://ja.javascript.info/task/fibonacci-numbers）
 export function fib(n) {
   let a = 1;
   let b = 1;
@@ -8,3 +9,11 @@ export function fib(n) {
   }
   return b;
 }
+
+// export function fib() {
+//   if (n <= 1) {
+//     return n;
+//   } else {
+//     return fib(n-1) + fib(n-2);
+//   }
+// }
