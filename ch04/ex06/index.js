@@ -11,7 +11,7 @@ function resize1(params) {
 
 
   function resize2(params) {
-    // params が undefined または null でない場合に params.max~ にアクセスします。
+    // params が undefined または null でない場合に params.max~ にアクセスする。
     // params.max~ が undefined または null の場合、null合体演算子 (??) を使用してデフォルト値を返す。
     let maxWidth = params?.maxWidth ?? 600;
     let maxHeight = params?.maxHeight ?? 480;

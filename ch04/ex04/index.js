@@ -7,6 +7,6 @@ export function bitCount(n) {
         // nを→に1ビットシフト
         n >>= 1;
     }
-    // 1ビットの数を返す
+    // 加算されたcountを返す
     return count;
 }
