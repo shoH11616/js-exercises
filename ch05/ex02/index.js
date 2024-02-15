@@ -1,28 +1,38 @@
-// if-else
+// if文のバージョン
 export function escapeWithIfElse(str) {
   let result = "";
   for (let char of str) {
-    if (char === "0") {
-      result += "\0";
-    } else if (char === "b") {
-      result += "\b";
-    } else if (char === "t") {
-      result += "\t";
-    } else if (char === "n") {
-      result += "\n";
-    } else if (char === "v") {
-      result += "\v";
-    } else if (char === "f") {
-      result += "\f";
-    } else if (char === "r") {
-      result += "\r";
-    } else if (char === '"') {
-      // eslint-disable-next-line no-useless-escape
-      result += '"';
-    } else if (char === "'") {
-      result += "'";
-    } else if (char === "\u005c") {
-      result += "\\";
+    // null文字が含まれている場合
+    if (char === "\u0000") {
+      result += "\\0";
+      // バックスペースが含まれている場合
+    } else if (char === "\u0008") {
+      result += "\\b";
+      // 水平タブが含まれている場合
+    } else if (char === "\u0009") {
+      result += "\\t";
+      // 改行が含まれている場合
+    } else if (char === "\u000A") {
+      result += "\\n";
+      // 垂直タブが含まれている場合
+    } else if (char === "\u000B") {
+      result += "\\v";
+      // 改頁が含まれている場合
+    } else if (char === "\u000C") {
+      result += "\\f";
+      // 復帰が含まれている場合
+    } else if (char === "\u000D") {
+      result += "\\r";
+      // 二重引用符が含まれている場合
+    } else if (char === "\u0022") {
+      result += '\\"';
+      // アポストロフィまたは単一引用符が含まれている場合
+    } else if (char === "\u0027") {
+      result += "\\'";
+      // バックスラッシュが含まれている場合
+    } else if (char === "\u005C") {
+      result += "\\" + "\u005C";
+      // エスケープシーケンスの必要がない文字の場合
     } else {
       result += char;
     }
@@ -35,37 +45,47 @@ export function escapeWithSwitch(str) {
   let result = "";
   for (let char of str) {
     switch (char) {
-      case "0":
-        result += "\0";
+      // null文字が含まれている場合
+      case "\u0000":
+        result += "\\0";
         break;
-      case "b":
-        result += "\b";
+      // バックスペースが含まれている場合
+      case "\u0008":
+        result += "\\b";
         break;
-      case "t":
-        result += "\t";
+      // 水平タブが含まれている場合
+      case "\u0009":
+        result += "\\t";
         break;
-      case "n":
-        result += "\n";
+      // 改行が含まれている場合
+      case "\u000A":
+        result += "\\n";
         break;
-      case "v":
-        result += "\v";
+      // 垂直タブが含まれている場合
+      case "\u000B":
+        result += "\\v";
         break;
-      case "f":
-        result += "\f";
+      // 改頁が含まれている場合
+      case "\u000C":
+        result += "\\f";
         break;
-      case "r":
-        result += "\r";
+      // 復帰が含まれている場合
+      case "\u000D":
+        result += "\\r";
         break;
-      case '"':
-        // eslint-disable-next-line no-useless-escape
-        result += '"';
+      // 二重引用符が含まれている場合
+      case "\u0022":
+        result += '\\"';
         break;
-      case "'":
-        result += "'";
+      // アポストロフィまたは単一引用符が含まれている場合
+      case "\u0027":
+        result += "\\'";
         break;
-      case "\u005c":
-        result += "\\";
+      // バックスラッシュが含まれている場合
+      case "\u005C":
+        result += "\\" + "\u005C";
         break;
+      // エスケープシーケンスの必要がない文字の場合
       default:
         result += char;
     }
