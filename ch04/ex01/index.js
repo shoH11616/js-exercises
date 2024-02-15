@@ -26,7 +26,7 @@ export function mul(c1, c2) {
 }
 
 export function div(c1, c2) {
-    var denom = c2.real * c2.real + c2.imag * c2.imag;
+    let denom = c2.real * c2.real + c2.imag * c2.imag;
     if (denom === 0) {
         throw new Error("Division by zero is not allowed in complex numbers.");
     }
