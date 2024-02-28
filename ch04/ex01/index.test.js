@@ -1,4 +1,4 @@
-import { add, sub, mul, div } from './index.js'; // あなたのモジュール名に置き換えてください
+import { add, sub, mul, div } from './index.js';
 
 describe('Complex number operations', () => {
     describe('add function', () => {
