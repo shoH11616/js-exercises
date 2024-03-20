@@ -1,4 +1,5 @@
 const mock = jest.fn();
+// ここでエラー:ReferenceError: jest is not definedが発生
 
 const obj = {
   x: 0,
@@ -9,7 +10,7 @@ const obj = {
   },
 };
 
-Object.defineProperty(obj, 'sum', { enumerable: false });
+Object.defineProperty(obj, "sum", { enumerable: false });
 
 obj.x = 1;
 obj.y = 2;
