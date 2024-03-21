@@ -4,9 +4,10 @@
  */
 function fizzbuzz(n) {
   [...Array(n)].map((_, i) => {
-    const x = i + 1;
+    // 1からnまでの配列を作成し、各要素に対してmap関数を適用
+    const x = i + 1; // 配列のインデックスは0から始まるため、1を加えて実際の数値を取得
     const output = (x % 3 ? "" : "Fizz") + (x % 5 ? "" : "Buzz");
-    console.log(output || x);
+    console.log(output || x); // outputが空文字列（つまり、数値が3でも5でも割り切れない）の場合は、数値自体を出力
   });
 }
 
@@ -17,7 +18,7 @@ function fizzbuzz(n) {
  * @return {number} 二乗差の合計
  */
 function sumOfSquaredDifference(f, g) {
-  return f.reduce((acc, val, i) => acc + (val - g[i]) ** 2, 0);
+  return f.reduce((acc, val, i) => acc + (val - g[i]) ** 2, 0); // 配列fの各要素と配列gの対応する要素の差の二乗を計算し、それらの合計を返す
 }
 
 /**
@@ -28,9 +29,9 @@ function sumOfSquaredDifference(f, g) {
 function sumOfEvensIsLargerThan42(array) {
   return (
     array
-      .filter((x) => x % 2 === 0)
+      .filter((x) => x % 2 === 0) // 配列から偶数だけを抽出
       .reduce((acc, val) => {
-        return acc + val >= 42 ? acc + val : acc;
-      }, 0) >= 42
+        return acc + val >= 42 ? acc + val : acc; // 偶数の合計が42以上になった場合は、その後の偶数を加算せずに合計値をそのまま保持
+      }, 0) >= 42 // 最終的な合計値が42以上かどうかを判断
   );
 }
