@@ -9,7 +9,9 @@ q.z = 3;
 
 console.log(o.isPrototypeOf(p)); // => true
 console.log(o.isPrototypeOf(q)); // => true
+// `o` は `p` および `q` のプロトタイプチェーン上に存在する
 console.log(p.isPrototypeOf(q)); // => true
+// `p` は `q` のプロトタイプチェーン上に存在する
 
 let obj = new Object();
 let arr = new Array();
