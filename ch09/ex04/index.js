@@ -34,14 +34,14 @@ export class MagicWarrior1 extends Warrior1 {
 }
 
 /**
- * 戦士コンストラクタ。攻撃力atkフィールドと攻撃attackメソッドを持つ。
+ * 戦士コンストラクタ関数。攻撃力atkフィールドと攻撃attackメソッドを持つ。
  */
 export function Warrior2(atk) {
   this.atk = atk;
 }
 
 /**
- * 攻撃メソッド。atkの2倍の値をダメージとして返す。
+ * Warrior2のプロトタイプに攻撃メソッドattackを追加。atkの2倍の値をダメージとして返す。
  * @returns {number} ダメージ値
  */
 Warrior2.prototype.attack = function () {
@@ -60,7 +60,7 @@ export function MagicWarrior2(atk, mgc) {
 MagicWarrior2.prototype = Object.create(Warrior2.prototype);
 
 /**
- * 攻撃メソッド。戦士のattackの値にmgcの値を加算した値をダメージとして返す。
+ * MagicWarrior2のprototypeに攻撃メソッドを追加。戦士のattackの値にmgcの値を加算した値をダメージとして返す。
  * @returns {number} ダメージ値
  */
 MagicWarrior2.prototype.attack = function () {

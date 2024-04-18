@@ -5,6 +5,7 @@
  */
 export function any(...funcs) {
   return function (...args) {
+    // funcsのいずれかの関数がtrueを返す場合、新しい関数もtrueを返す
     return funcs.some((func) => func(...args));
   };
 }
@@ -18,8 +19,10 @@ export function any(...funcs) {
 export function catching(tryFunc, catchFunc) {
   return function (...args) {
     try {
+      // tryfuncを呼び出しその結果を返す
       return tryFunc(...args);
     } catch (e) {
+      // エラーが補足された場合、catchFunc関数を返す
       return catchFunc(e);
     }
   };

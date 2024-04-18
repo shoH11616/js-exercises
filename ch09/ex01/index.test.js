@@ -6,5 +6,6 @@ test("class puzzle", () => {
   expect(C.C.method()).toBe(3);
   expect(new C.C().method()).toBe(4);
   expect(new C().C.method()).toBe(5);
+  // TypeError: (intermediate value).C.method is not a function
   expect(new new C().C().method()).toBe(6);
 });

@@ -5,11 +5,13 @@
  * @throws {Error} - いずれかの奇数番の値が文字列でない場合、または値の個数の合計が偶数ではない場合
  */
 export function sequenceToObject(...values) {
+  // 引数の個数が偶数でない場合はエラー
   if (values.length % 2 !== 0) {
     throw new Error("値の個数の合計が偶数ではありません。");
   }
 
   const obj = {};
+  // 引数の配列を 2つずつスキップしながらループを開始
   for (let i = 0; i < values.length; i += 2) {
     if (typeof values[i] !== "string") {
       throw new Error("奇数番の値が文字列ではありません。");

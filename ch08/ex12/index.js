@@ -7,5 +7,7 @@ export function f(body) {
   const args = ["$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9", "$10"];
   // bodyがブロックスコープを含む場合と含まない場合で、return文の扱いを分ける
   const funcBody = body.startsWith("{") ? body : `return ${body}`;
+  // Functionコンストラクタを使って新しい関数を作成
+  // 引数はargs, 本体はfuncbody
   return new Function(...args, funcBody);
 }

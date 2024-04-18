@@ -1,5 +1,6 @@
 // Jest encountered an unexpected tokenでテストうまくいかなかった
 import { AlarmClock } from "./index.js";
+// Jest encountered an unexpected token
 
 describe("AlarmClock", () => {
   let alarmClock;

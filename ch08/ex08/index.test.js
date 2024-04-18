@@ -3,6 +3,7 @@ import { counterGroup } from "./index.js";
 describe("counterGroup", () => {
   describe("Counter", () => {
     describe("#count", () => {
+      // countメソッドはインクリメントされた値を返す
       test("It returns incremented value", () => {
         const cg = counterGroup();
         const counter = cg.newCounter();
@@ -13,6 +14,7 @@ describe("counterGroup", () => {
     });
 
     describe("#reset", () => {
+      // resetメソッドはカウンターの値をリセットする
       test("It resets incrementedd value", () => {
         const cg = counterGroup();
         const counter = cg.newCounter();
@@ -23,6 +25,7 @@ describe("counterGroup", () => {
     });
 
     describe("Isolation between Counter", () => {
+      // 異なるカウンターの状態は隔離されている
       test("States in counters are isolated", () => {
         const cg = counterGroup();
         const c1 = cg.newCounter();
@@ -39,6 +42,7 @@ describe("counterGroup", () => {
   });
 
   describe("#total", () => {
+    // counterGroup内の全てのカウンターの値の合計を返す
     test("It returns total amount of all counters in CounterGroup", () => {
       const cg = counterGroup();
       expect(cg.total()).toBe(0);

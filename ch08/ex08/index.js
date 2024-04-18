@@ -3,8 +3,8 @@
  * @returns {Object} - `newCounter`メソッドと`total`メソッドを持つオブジェクト
  */
 export function counterGroup() {
-  let total = 0;
-  const counters = [];
+  let total = 0; // すべてのカウンターの値の合計を格納
+  const counters = []; // 作成されたすべてのカウンターを格納
 
   return {
     /**
@@ -21,15 +21,15 @@ export function counterGroup() {
          * @returns {number} - インクリメント後のカウンターの値
          */
         count: function () {
-          total++;
-          return count++;
+          total++; // totalを1増やす
+          return count++; // countの値を1増やし、その増やした値を返す
         },
         /**
          * カウンターの値をリセットするメソッド。
          */
         reset: function () {
-          total -= count;
-          count = 0;
+          total -= count; // totalからcountの値を引く
+          count = 0; // countの値を0にリセット
         },
       };
     },

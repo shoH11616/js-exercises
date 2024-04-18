@@ -61,7 +61,7 @@ export class C {
        * @returns {class} 新しいクラス
        */
       get C() {
-        return class {
+        return new (class {
           /**
            * このメソッドは 6 を返します。
            * @returns {number} 6
@@ -69,7 +69,7 @@ export class C {
           method() {
             return 6;
           }
-        };
+        })();
       }
     };
   }

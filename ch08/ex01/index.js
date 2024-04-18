@@ -8,7 +8,9 @@ export const printAndReturn = (n, c) => {
   Array(n)
     .fill()
     .forEach(() => console.log(c));
+  // 文字cがn回コンソールに出力される。
   return Array(n).fill(c);
+  // cをn個含む配列が作成され、その配列が返される。
 };
 // 引数が一つ以上ある場合、括弧は必要。
 // また、関数本体が複数の文からなる場合、波括弧も必要

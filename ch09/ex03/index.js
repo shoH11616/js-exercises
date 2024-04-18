@@ -17,6 +17,7 @@ export class C1 {
  * @returns {object} xのgetterを持つオブジェクト
  */
 export function C2() {
+  // ローカル変数
   let x = 42;
 
   /**
@@ -27,5 +28,6 @@ export function C2() {
     return x;
   }
 
+  // getX関数をプロパティに持つオブジェクトを返す。
   return { getX };
 }

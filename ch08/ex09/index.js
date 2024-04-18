@@ -5,8 +5,10 @@
  */
 export function withResource(resource, callback) {
   try {
+    // リソースを使用する処理を記述したコールバック関数を呼ぶ
     callback(resource);
   } finally {
+    // エラーが発生したか同課に限らず、かならずcloseメソッドが呼び出される。
     resource.close();
   }
 }
