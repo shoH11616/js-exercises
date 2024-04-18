@@ -5,8 +5,11 @@
  * @returns {boolean} objectがconstructorのインスタンスであればtrue、そうでなければfalse
  */
 export function instanceOf(object, constructor) {
+  // Objectのプロトタイプを取得
   let proto = Object.getPrototypeOf(object);
 
+  // nullかundifinedになるまでループ
+  // プロトタイプチェーンをたどる
   while (proto) {
     if (proto === constructor.prototype) {
       return true;
