@@ -21,19 +21,23 @@ export function isEmailAddress(str) {
     return false;
   }
 
+  // CWFSを含むdot-atomは受け付けないため、エスケープが必要な文字を除外する
+  const localPartRegex =
+    /^[!#$%&'*+\-/=?^_`{|}~0-9A-Za-z]+(\.[!#$%&'*+\-/=?^_`{|}~0-9A-Za-z]+)*$/;
+  const domainRegex = /^[0-9A-Za-z]+(\.[0-9A-Za-z]+)*$/;
+
   const [localPart, domain] = str.split("@");
 
   // ローカル部の長さが64文字を超えている場合はメールアドレスではない
-  if (localPart.length > 64) {
+  if (!localPart || localPart.length > 64 || !localPartRegex.test(localPart)) {
     return false;
   }
 
   // ドメイン部の長さが253文字を超えている場合はメールアドレスではない
-  if (domain && domain.length > 253) {
+  if (!domain || domain.length > 253 || !domainRegex.test(domain)) {
     return false;
   }
 
-  const emailRegex =
-    /^[!#$%&'*+\-/=?^_`{|}~0-9A-Za-z]+(\.[!#$%&'*+\-/=?^_`{|}~0-9A-Za-z]+)*@[0-9A-Za-z]+(\.[0-9A-Za-z]+)*$/;
-  return emailRegex.test(str);
+  // ローカル部とドメイン部が両方とも正しい形式であることを確認
+  return localPartRegex.test(localPart) && domainRegex.test(domain);
 }

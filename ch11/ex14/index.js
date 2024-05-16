@@ -16,21 +16,28 @@ export function sortJapanese(arr) {
  * @return {string} - 和暦の日付文字列
  */
 export function toJapaneseDateString(date) {
+  // Dateオブジェクトから年、月、日を取得
   const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+  const month = date.getMonth() + 1; // getMonthは0から始まるため、1を足す
   const day = date.getDate();
 
+  // 和暦の元号と年を格納する変数を宣言
   let era = "";
   let eraYear = 0;
 
-  if (
+  // 以下の条件分岐で、西暦の日付を和暦の元号と年に変換
+  if (year === 2019 && month === 4 && day === 30) {
+    // 2019年4月30日は平成の最終日
+    era = "平成";
+    eraYear = year - 1988;
+  } else if (
     year > 2019 ||
     (year === 2019 && month > 4) ||
     (year === 2019 && month === 4 && day >= 1)
   ) {
     // 2019年5月1日以降は令和
     era = "令和";
-    eraYear = year - 2018;
+    eraYear = year - 2018; // 令和元年は2019年なので、2018を引く
   } else if (
     year > 1989 ||
     (year === 1989 && month > 1) ||
@@ -61,5 +68,8 @@ export function toJapaneseDateString(date) {
     eraYear = year - 1867;
   }
 
-  return `${era}${eraYear}年${month}月${day}日`;
+  // 元年の場合は「元年」と表示する
+  const eraYearString = eraYear === 1 ? "元年" : `${eraYear}年`;
+
+  return `${era}${eraYearString}${month}月${day}日`;
 }

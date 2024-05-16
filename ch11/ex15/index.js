@@ -11,8 +11,11 @@
 export function modifyUrl({ base, addQuery, path }) {
   // URLの形式が正しいかチェック
   try {
+    // ベースのURLが有効な形式かどうかをチェックするために、try-catchブロックを使用
+    // URLクラスのコンストラクタを使用して、ベースのURLが有効かどうかをテスト
     new URL(base);
   } catch (e) {
+    // ベースのURLが無効な形式の場合、エラー
     throw new Error("Invalid URL format");
   }
 
@@ -21,11 +24,14 @@ export function modifyUrl({ base, addQuery, path }) {
 
   // パスの修正
   if (path) {
+    // 新しいURLオブジェクトを作成し、そのpathnameプロパティを現在のURLオブジェクトのpathnameに設定
     url.pathname = new URL(path, url).pathname;
   }
 
   // クエリの追加
   if (addQuery) {
+    // addQuery配列の各要素（キーと値のペア）に対してループを行い、
+    // searchParams.appendメソッドを使用してURLにクエリパラメータを追加
     addQuery.forEach(([key, value]) => {
       url.searchParams.append(key, value);
     });

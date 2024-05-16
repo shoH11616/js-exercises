@@ -1,3 +1,3 @@
 module.exports = class BitSet extends AbstractWritableSet {
-  // 実装は割愛。
+  // ここに実装を書く
 };

@@ -26,6 +26,7 @@ export class TypeMap {
    * @returns {Object} コンストラクタ関数のクラスのインスタンス
    */
   get(key) {
+    //  // key に対応する値を Map から取得して返す。
     return this.map.get(key);
   }
 }
