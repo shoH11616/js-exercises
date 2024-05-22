@@ -30,5 +30,5 @@ function costOfLength(N) {
 }
 
 // 以下を変更して実験しなさい
-console.log(costOfLength(10000));
 console.log(costOfLength(100000000));
+console.log(costOfLength(1000000000));

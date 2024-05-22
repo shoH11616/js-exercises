@@ -1,7 +1,7 @@
 // app.js
 
 // myModule.jsから関数とクラスをインポート
-import { greet, Person } from "./myModule.js";
+const { greet, Person } = require("./myModule.js");
 
 // 関数の利用
 console.log(greet("Alice"));

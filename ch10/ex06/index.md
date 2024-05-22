@@ -1,3 +1,9 @@
+・予想
+Module is being executed.
+First import done.
+Module is being executed.
+Second import done.
+
 ・実行結果
 Module is being executed.
 First import done.

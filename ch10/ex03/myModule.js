@@ -6,14 +6,14 @@
  * @param {string} name - 挨拶する対象の名前。
  * @return {string} 挨拶メッセージ。
  */
-export function greet(name) {
+function greet(name) {
   return `Hello, ${name}!`;
 }
 
 /**
  * Personクラス。
  */
-export class Person {
+class Person {
   /**
    * Personクラスのコンストラクタ。
    *
@@ -34,3 +34,9 @@ export class Person {
     return `My name is ${this.name} and I am ${this.age} years old.`;
   }
 }
+
+// 関数とクラスをエクスポート
+module.exports = {
+  greet,
+  Person,
+};
