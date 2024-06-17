@@ -1,0 +1,11 @@
+jQuery.Deferred：
+・非同期処理を扱うための仕組み
+・jQueryにおいて主に非同期処理を扱うための仕組みで、非同期処理の完了を待ってthenに登録したコールバックを実行することができる。
+・Deferredは初期状態はpendingで、resolveが呼ばれるとresolved
+状態になり、doneで登録されたコールバックを実行する
+・またrejectが呼ばれるとrejected状態になり、failで登録されたコールバックを実行する。
+
+Promiseとの違い
+・PromiseはDeferredの機能制限版で、状態遷移関連のメソッドが取り除かれている。
+・Promiseは最初に決定された状態を保ち、その後呼び出されたresolve/rejectは無視する。また、thenが返す新しいPromiseは、元のオブジェクトとは異なる状態に決定できる。
+・これに対し、Deferredはresolveやrejectを持つため、関数の返値をPromiseにしておけば、関数の外側で状態が決定される心配がない。
