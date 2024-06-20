@@ -11,18 +11,21 @@ import { join } from "path";
  * @yields {object} ファイル/ディレクトリの情報を持つオブジェクト
  */
 export function* walk(rootPath) {
-  const files = readdirSync(rootPath);
+  const files = readdirSync(rootPath); // 指定されたディレクトリ内のファイル・ディレクトリの一覧を取得
 
   for (const file of files) {
-    const filePath = join(rootPath, file);
-    const stats = statSync(filePath);
+    // 取得した一覧を順に処理
+    const filePath = join(rootPath, file); // 絶対パス
+    const stats = statSync(filePath); // 絶対パスに対応するファイル/ディレクトリの情報を取得
 
     yield {
+      // ディレクトリであるかどうかを判断
       path: filePath,
       isDirectory: stats.isDirectory(),
     };
 
     if (stats.isDirectory()) {
+      // ファイルパスがディレクトリだった場合、再帰的にそのディレクトリを再探索
       yield* walk(filePath);
     }
   }

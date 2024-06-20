@@ -10,30 +10,34 @@ import { openSync, readSync, closeSync } from "fs";
  * @yields {string} ファイルの次の行
  */
 export function* readLines(filePath) {
-  const bufferSize = 1024;
-  const buffer = Buffer.alloc(bufferSize);
+  const bufferSize = 1024; // バッファサイズを定義
+  const buffer = Buffer.alloc(bufferSize); // 指定したサイズのバッファを確保
 
-  let fd;
+  let fd; // ファイルディスクリプタを保持するための変数
   try {
-    fd = openSync(filePath, "r");
-    let leftover = "";
-    let bytesRead;
+    fd = openSync(filePath, "r"); // ファイルを開く
+    let leftover = ""; // バッファから読み込んだデータのうち、まだ処理されていない残りの部分を保持する変数
+    let bytesRead; // 一度読み込んだバイト数
 
+    // 読み込むデータが存在しなくなるまでreafSync関数でファイルから指定したバイト数のデータを読み込みバッファに格納する
     while ((bytesRead = readSync(fd, buffer, 0, bufferSize, null)) > 0) {
       let lines = (leftover + buffer.toString("utf8", 0, bytesRead)).split(
         "\n"
       );
       leftover = lines.pop();
       for (let line of lines) {
+        // 配列の各要素を処理（ファイルの各行）
         yield line;
       }
     }
 
+    // 処理されなかったデータがあるかどうかチェック
     if (leftover) {
       yield leftover;
     }
   } finally {
     if (fd !== undefined) {
+      // 必ずファイルを閉じる
       closeSync(fd);
     }
   }
