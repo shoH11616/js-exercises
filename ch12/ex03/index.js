@@ -11,15 +11,11 @@ export function* counter() {
   let i = 0;
   while (true) {
     try {
-      // ジェネレータ関数の実行を一時停止し値を返す
+      i++;
       yield i;
     } catch (e) {
-      // エラーがキャッチされた場合はカウンタをリセット
       i = 0;
-      // ループの次のイテレーションに直接ジャンプ
-      continue;
+      yield 0;
     }
-    // インクリメント
-    i++;
   }
 }
