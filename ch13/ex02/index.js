@@ -7,14 +7,6 @@ function wait(msec) {
   return new Promise((resolve) => setTimeout(resolve, msec));
 }
 
-// 例: 1秒後に "A" と出力し、その2秒後に "B" と出力し、その3秒後に "C" と出力する
-wait(1000)
-  .then(() => console.log("A"))
-  .then(() => wait(2000))
-  .then(() => console.log("B"))
-  .then(() => wait(3000))
-  .then(() => console.log("C"));
-
 // 0, 1, 2, 3 秒待つ
 const wait0 = () => wait(0);
 const wait1 = () => wait(1000);
@@ -94,8 +86,8 @@ function f2() {
 
 function f3() {
   // NOTE: then のコールバック内の例外は try/catch でキャッチできるだろうか
-  // 解答：なにも出力しない
-  // 理由：Promiseのエラーは同期的なトライキャッチで捕捉できないから
+  // 解答：c,a,Error: Xが出力
+  // 理由：finallyブロックが同期的に実行⇒Promiseチェーンの最初のthenが解決されAが出力⇒次のthenでエラーがスローされるが、非同期のPromiseチェーン内のエラーはcatchしないためBの出力はない。
   try {
     wait(0).then(logA).then(errX);
   } catch (e) {
@@ -125,8 +117,8 @@ function f4() {
 
 function f5() {
   // NOTE: 2つ目の then の引数が関数でなく Promise になっている (典型的なミス)
-  // 解答：2秒後に"A"を出力し、その1秒後に"B"を出力しますが、"100"は出力されない
-  // 理由：2つ目のthenの引数がPromiseであるため、その解決値が次のthenに渡されないから。
+  // 解答：B⇒A⇒40と出力
+  // 理由：wait1().then(...)が最初に実行されBが出力。ただしその結果は次のthenには渡らない⇒wait2().then(...) の中の then が解決されAが出力⇒wait2().then(...) の最初の then が 40 を返すため、これが次のthenに渡され40が出力
   wait2()
     .then(() => {
       logA();
@@ -188,8 +180,8 @@ function f9() {
 
 function f10() {
   // NOTE: then(r, c) と then(r).catch(c) は等しいか？
-  // 解答：1秒後に"Y"を出力し、その後に"A"を出力。
-  // 理由：thenメソッドの2つ目の引数はエラーハンドラとして機能し、前のPromiseが拒否された場合に呼び出されるから。
+  // 解答：A⇒エラーYがスロー
+  // 理由：finalluブロックが同期的に実行され、そのあとエラーYがthrowされるが、このエラーは非同期内なためcatchでは補足されない。then(r, c)は前のPromiseが解決された場合にrを呼び出し拒否された場合にcを呼び出すが、then(r).catch(c)は前のPromisega解決された場合にrを呼び出し、rがエラーをthrowした場合にcを呼び出す。
   wait1()
     .then(() => 42)
     .then(errY, (e) => log(e.message))
@@ -207,9 +199,22 @@ function f11() {
 
 function f12() {
   // new Promise 内だがコールバック関数で throw した場合は？
-  // 解答：何も出力しない。
+  // 解答：Error: X
   // 理由：setTimeout内でスローされたエラーは、そのPromiseの外部で発生するため、そのPromiseのcatchでは捕捉できないから。
   new Promise((resolve, reject) => {
     setTimeout(() => errX(), 0);
   }).catch((e) => log(e.message));
 }
+
+// f1();
+// f2();
+// f3();
+// f4();
+// f5();
+// f6();
+// f7();
+// f8();
+// f9();
+// f10();
+// f11();
+f12();
