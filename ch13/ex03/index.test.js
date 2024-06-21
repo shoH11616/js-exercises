@@ -15,8 +15,13 @@ describe("File System functions", () => {
 
   describe("stat function", () => {
     it("should return stats object when path is valid", async () => {
-      const stats = await stat("./index.js");
+      const stats = await stat("./emptyIndex.js");
       expect(stats.isFile()).toBe(true);
+    });
+
+    it("should return stats object when path is a directory", async () => {
+      const stats = await stat("./emptyDirectory");
+      expect(stats.isDirectory()).toBe(true);
     });
 
     it("should throw error when path is invalid", async () => {
