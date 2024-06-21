@@ -14,7 +14,7 @@ export function* primes() {
     if (!sieve[k]) {
       yield k;
       let l = k * k;
-      while (l < 100) {
+      while (l < 100000) {
         // はじめはNumber.MAX_SAFE_INTEGERにしていたが、うまく動作しなかった。
         sieve[l] = true;
         l += k;

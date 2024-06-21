@@ -1,6 +1,6 @@
 import * as path from "node:path";
 import * as fs from "node:fs/promises";
-import { fetchSumOfFileSizes } from "./index.js"; // あなたのモジュールへのパスを適切に置き換えてください
+import { fetchSumOfFileSizes } from "./index.js";
 
 describe("File System functions", () => {
   describe("fetchSumOfFileSizes function", () => {

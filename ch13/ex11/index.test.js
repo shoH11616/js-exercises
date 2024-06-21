@@ -1,4 +1,4 @@
-import { retryWithExponentialBackoff } from "./index.js"; // あなたのモジュールへのパスを適切に置き換えてください
+import { retryWithExponentialBackoff } from "./index.js";
 
 describe("retryWithExponentialBackoff", () => {
   it("resolves when func resolves", async () => {

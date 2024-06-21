@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import { readdir, stat } from "./index.js"; // あなたのモジュールへのパスを適切に置き換えてください
+import { readdir, stat } from "./index.js";
 
 describe("File System functions", () => {
   describe("readdir function", () => {
@@ -15,7 +15,7 @@ describe("File System functions", () => {
 
   describe("stat function", () => {
     it("should return stats object when path is valid", async () => {
-      const stats = await stat("./index.js"); // あなたのモジュールへのパスを適切に置き換えてください
+      const stats = await stat("./index.js");
       expect(stats.isFile()).toBe(true);
     });
 
