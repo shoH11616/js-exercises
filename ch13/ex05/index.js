@@ -7,14 +7,6 @@ function wait(msec) {
   return new Promise((resolve) => setTimeout(resolve, msec));
 }
 
-// 例: 1秒後に "A" と出力し、その2秒後に "B" と出力し、その3秒後に "C" と出力する
-wait(1000)
-  .then(() => console.log("A"))
-  .then(() => wait(2000))
-  .then(() => console.log("B"))
-  .then(() => wait(3000))
-  .then(() => console.log("C"));
-
 // 0, 1, 2, 3 秒待つ
 const wait0 = () => wait(0);
 const wait1 = () => wait(1000);

@@ -94,7 +94,8 @@ async function i3() {
 
 async function i4() {
   // 解答：01234COMPLETEDと出力
-  // 理由：wait((5 - i) * 1000).then(() => log(i))が五回実行。それぞれのPromiseは指定した時間が経過した後にiの値をログに出力。
+  // 理由：wait((5 - i) * 1000).then(() => log(i))が五回実行。
+  // それぞれのPromiseは指定した時間が経過した後にiの値をログに出力。
   // NOTE: i5, i6 との比較用 (直列に処理を実行したいものとする)
   let p = Promise.resolve(null);
   for (let i = 0; i < 5; ++i) {
@@ -182,8 +183,8 @@ async function i8() {
 // i1();
 // i2();
 // i3();
-// i4();
+i4();
 // i5();
 // i6();
 // i7();
-i8();
+// i8();

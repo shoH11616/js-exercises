@@ -10,7 +10,6 @@ describe("File System functions", () => {
     });
 
     it("should return null when directory is empty", async () => {
-      // ここで空のディレクトリへのパスを指定してください
       const size = await fetchFirstFileSize("./emptyDirectory");
       expect(size).toBeNull();
     });
