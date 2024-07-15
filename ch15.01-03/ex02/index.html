@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+  <body>
+    <script type="module">
+      async function loadModule() {
+        const module = await import("./dynamic-module.js");
+        module.hello();
+      }
+      loadModule();
+    </script>
+  </body>
+</html>

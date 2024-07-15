@@ -3,20 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script type="module" src="/ch15.01-03/ex10/index.js"></script>
+    <title>XSS 例</title>
+    <style>
+      #profile-display {
+        width: 200px;
+        height: 50px;
+        border: 1px solid black;
+        background-color: white;
+      }
+      #profile-input {
+        display: block;
+      }
+    </style>
+    <script type="module">
+      window.onload = function () {
+        const profileDisplay = document.getElementById("profile-display");
+        const profileInput = document.getElementById("profile-input");
+
+        profileDisplay.addEventListener("click", function () {
+          profileInput.focus();
+        });
+
+        profileInput.addEventListener("focus", function () {
+          profileDisplay.style.backgroundColor = "silver";
+        });
+
+        profileInput.addEventListener("blur", function () {
+          profileDisplay.style.backgroundColor = "white";
+        });
+
+        profileInput.addEventListener("input", function () {
+          profileDisplay.textContent = "";
+          profileDisplay.appendChild(
+            document.createTextNode(profileInput.value)
+          );
+        });
+      };
+    </script>
   </head>
   <body>
-    <div
-      style="
-        width: 640px;
-        height: 480px;
-        border-style: solid;
-        border-width: 1px;
-      "
-      id="editor-front"
-      data-testid="editor-front"
-    ></div>
-    <input type="text" name="editor-back" id="editor-back" />
+    <h1>プロフィール</h1>
+    <div id="profile-display" data-testid="editor-front"></div>
+    <input type="text" id="profile-input" />
   </body>
 </html>
