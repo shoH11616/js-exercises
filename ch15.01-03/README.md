@@ -81,8 +81,8 @@ index1.html と index2.html についてなるべく速くスクリプトがロ�
 
 1. script タグに async="true"を付与
 2. script タグに defer="true"を付与
-3. js 内の処理を window.addEventListener("domcontentloaded", () => {})で囲む
-4. js 内の処理を document.addEventListener("loaded", () => {})で囲む
+3. js 内の処理を document.addEventListener("domcontentloaded", () => {})で囲む
+4. js 内の処理を window.addEventListener("load", () => {})で囲む
 
 ヒント: ロードされる速さはデベロッパーツールでネットワークタブを開きキャッシュを無効化にチェックを付けてリロードすると確認できる
 
@@ -196,9 +196,9 @@ div 要素とテキスト input 要素が以下のようにイベント処理さ
         // 2. 生成済みのpタグ要素のテキストに、イベントの保持する乱数値を代入しなさい。
       });
 
-      // 3. ボタンにイベントリスナを追加し、ボタン押下するごとに乱数値を変更しなさい。変更にはtriggerを利用しなさい。
+      // 3. ボタンにイベントリスナを追加し、ボタン押下するごとに乱数値を変更しなさい。変更にはRandomEventTargetのtriggerメソッドを利用しなさい。
 
-      // 4. RandomEventTargetにイベントリスナを追加し、ページ読み込み時に乱数値を表示しなさい。変更にはtriggerを利用しなさい。
+      // 4. RandomEventTargetのtriggerメソッドによってイベントを発生させて、ページ読み込み時に乱数値を表示しなさい。
 
     </script>
   </head>
