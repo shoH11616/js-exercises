@@ -3,6 +3,7 @@
  * @returns {Object} プロパティaが1のオブジェクト
  */
 export function unwritableAndUnconfigurableObj() {
+  // 'a'プロパティが1のオブジェクトを凍結して返す
   return Object.freeze({ a: 1 });
 }
 
@@ -11,11 +12,14 @@ export function unwritableAndUnconfigurableObj() {
  * @returns {Object} プロパティbが2のオブジェクト
  */
 export function writableAndUnconfigurableObj() {
+  // 'b'プロパティが2のオブジェクトを作成
   const obj = { b: 2 };
+  // 'b'プロパティを書き込み可能、設定不可能にする
   Object.defineProperty(obj, "b", {
     writable: true,
     configurable: false,
   });
+  // オブジェクトを返す
   return obj;
 }
 
@@ -24,6 +28,7 @@ export function writableAndUnconfigurableObj() {
  * @returns {Object} プロパティcがネストされたオブジェクトのオブジェクト
  */
 export function nestedUnwritableObj() {
+  // 'c'プロパティがネストされたオブジェクトのオブジェクトを凍結して返す
   return Object.freeze({
     c: Object.freeze({
       d: Object.freeze({

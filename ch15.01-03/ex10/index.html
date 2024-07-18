@@ -17,23 +17,30 @@
     </style>
     <script type="module">
       window.onload = function () {
+        // IDが'profile-display'と'profile-input'の要素を取得
         const profileDisplay = document.getElementById("profile-display");
         const profileInput = document.getElementById("profile-input");
 
+        // 'profile-display'要素がクリックされたときに'profile-input'要素にフォーカスを移すイベントリスナーを追加
         profileDisplay.addEventListener("click", function () {
           profileInput.focus();
         });
 
+        // 'profile-input'要素がフォーカスされたときに'profile-display'要素の背景色を銀色にするイベントリスナーを追加
         profileInput.addEventListener("focus", function () {
           profileDisplay.style.backgroundColor = "silver";
         });
 
+        // 'profile-input'要素からフォーカスが外れたときに'profile-display'要素の背景色を白に戻すイベントリスナーを追加
         profileInput.addEventListener("blur", function () {
           profileDisplay.style.backgroundColor = "white";
         });
 
+        // 'profile-input'要素で入力があったときに'profile-display'要素の内容を更新するイベントリスナーを追加
         profileInput.addEventListener("input", function () {
+          // 'profile-display'要素の内容をクリア
           profileDisplay.textContent = "";
+          // 'profile-input'要素の現在の値をテキストノードとして'profile-display'要素に追加
           profileDisplay.appendChild(
             document.createTextNode(profileInput.value)
           );

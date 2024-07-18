@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>XSS 例</title>
     <script type="module">
+      // '/ch15.01-03/ex08/data.json'からデータを非同期に取得
       const res = await fetch("/ch15.01-03/ex08/data.json");
+      // 取得したデータをJSONとして解析
       const json = await res.json();
+      // IDが'profile-display'の要素を取得
       const profileDisplay = document.getElementById("profile-display");
+      // 取得した要素のHTML内容を、取得したデータを元に作成した文字列で置き換え
       profileDisplay.innerHTML = `<p>名前: ${json.name}</p><p>年齢: ${json.age}</p>`;
     </script>
   </head>

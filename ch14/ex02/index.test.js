@@ -17,3 +17,23 @@ test("MyArray.slice()", () => {
   expect(result.length).toBe(2);
   expect(Array.from(result)).toStrictEqual(["B", "C"]);
 });
+// FAIL  ch14/ex02/index.test.js
+// × MyArray.map() (2 ms)
+// √ MyArray.slice()
+
+// ● MyArray.map()
+
+//   expect(received).toBe(expected) // Object.is equality
+
+//   Expected: 5
+//   Received: undefined
+
+//      6 |
+//      7 |   expect(result instanceof MyArrayLike).toBe(true);
+//   >  8 |   expect(result.length).toBe(5);
+//        |                         ^
+//      9 |   expect(Array.from(result)).toStrictEqual([1, 4, 9, 16, 25]);
+//     10 | });
+//     11 |
+
+//     at Object.toBe (ch14/ex02/index.test.js:8:25)

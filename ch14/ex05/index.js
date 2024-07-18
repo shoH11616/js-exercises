@@ -7,8 +7,11 @@
 export function expandType(literals, ...expressions) {
   let result = "";
 
+  // リテラルと式を交互に連結
   for (let i = 0; i < literals.length; i++) {
+    // リテラル部分を結果に追加
     result += literals[i];
+    // 式が存在すれば、その型名を結果に追加
     if (i < expressions.length) {
       result += typeof expressions[i];
     }
