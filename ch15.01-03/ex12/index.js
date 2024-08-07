@@ -1,4 +1,4 @@
-javascript: (function () {
+(() => {
   // タスクと合計時間を保存するための変数を初期化
   var tasks = [];
   var total = 0;
