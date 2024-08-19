@@ -46,7 +46,31 @@ function updateGrid(grid) {
 
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
-      // 周囲のセルの生存数を数えて nextGrid[row][col] に true or false を設定する (実装してね)
+      const cell = grid[row][col];
+      let numNeighbors = 0;
+
+      // 周囲のセルの生存数を数える
+      for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+          if (i === 0 && j === 0) {
+            continue;
+          }
+          const x = row + i;
+          const y = col + j;
+
+          if (x >= 0 && x < ROWS && y >= 0 && y < COLS) {
+            const currentNeighbor = grid[x][y];
+            numNeighbors += currentNeighbor ? 1 : 0;
+          }
+        }
+      }
+
+      // Life Game のルールに従って次の状態を決定する
+      if (cell && (numNeighbors < 2 || numNeighbors > 3)) {
+        nextGrid[row][col] = false;
+      } else if (!cell && numNeighbors === 3) {
+        nextGrid[row][col] = true;
+      }
     }
   }
   return nextGrid;
