@@ -2,20 +2,23 @@
 
 Error: locator.evaluate: TypeError: Cannot read properties of null (reading 'querySelector')
 
-上記のエラーを超えられなかった。 */
+上記のエラーを解決できなかった。 */
 
 import { expect, test } from "@playwright/test";
 
+// カスタムしたサークルのテスト
 test.describe("Custom Inline Circle Element", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/ch15.04-10/ex05/index.html");
   });
 
+  // inline-circle要素がレンダリングされているかどうか
   test("should render inline-circle elements", async ({ page }) => {
     const circles = await page.locator("inline-circle");
     expect(await circles.count()).toBe(3);
   });
 
+  // inline-circle要素の枠線の色が正しいか
   test("should have correct border colors", async ({ page }) => {
     const redCircle = await page.locator("inline-circle").nth(0);
     const blueCircle = await page.locator("inline-circle").nth(1);
@@ -42,6 +45,7 @@ test.describe("Custom Inline Circle Element", () => {
     expect(greenBorderColor).toBe("rgb(0, 128, 0)");
   });
 
+  // inline-circle要素の寸法が正しいか
   test("should have correct dimensions", async ({ page }) => {
     const circle = await page.locator("inline-circle").first();
     const width = await circle.evaluate((el) => {
@@ -59,6 +63,7 @@ test.describe("Custom Inline Circle Element", () => {
     expect(height).toBe("50px");
   });
 
+  // inline-circle要素がインラインブロックであるかどうか
   test("should be inline-block", async ({ page }) => {
     const circle = await page.locator("inline-circle").first();
     const display = await circle.evaluate((el) => {

@@ -1,14 +1,15 @@
 const template = document.createElement("template");
+// テンプレートの内容を設定
 template.innerHTML = `\
 <style>
 .completed {
-  text-decoration: line-through;
+  text-decoration: line-through; // 完了したタスクのテキストに取り消し線を引く
   color: #6c757d; /* グレー */
 }
 .form-inline {
   background-color: #f8f9fa; /* ライトグレー */
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 5px; // 入力フィールドが残りのスペースを占めるようにする
 }
 #new-todo {
   flex-grow: 1;
@@ -39,10 +40,10 @@ template.innerHTML = `\
 </style>
 
 <form id="new-todo-form" class="form-inline mb-3">
-  <input type="text" id="new-todo" class="form-control mr-2" placeholder="What needs to be done?" />
-  <button class="btn btn-primary">Add</button>
+  <input type="text" id="new-todo" class="form-control mr-2" placeholder="What needs to be done?" /> <!-- 新しいタスクを入力するフィールド -->
+  <button class="btn btn-primary">Add</button> <!-- タスクを追加するボタン -->
 </form>
-<ul id="todo-list" class="list-group"></ul>
+<ul id="todo-list" class="list-group"></ul> <!-- タスクのリスト -->
 `;
 
 class TodoApp extends HTMLElement {

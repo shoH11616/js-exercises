@@ -65,12 +65,17 @@ javascript: (() => {
     link.href = `#${fragmentName}`;
     link.innerHTML = heading.innerHTML;
 
+    // リンクがクリックされたときのイベントリスナーを追加
     link.addEventListener("click", (e) => {
+      // デフォルトのリンク動作を無効化
       e.preventDefault();
+      // クリックされたリンクの名前属性に一致するターゲット要素を取得
       const target = document.querySelector(`a[name="${fragmentName}"]`);
+      // ターゲット要素が存在しない場合は処理を終了
       if (!target) {
         return;
       }
+      // ターゲット要素が存在する場合、スムーズにスクロールして表示
       target.scrollIntoView({ behavior: "smooth" });
     });
 

@@ -1,15 +1,18 @@
+/* 背景色と文字色を設定し、フォントをArialに指定 */
 body {
   background-color: #1a1a1a;
   color: #ffffff;
   font-family: "Arial", sans-serif;
 }
 
+/* 新しいToDoフォームを中央に配置し、マージンを設定 */
 #new-todo-form {
   display: flex;
   justify-content: center;
   margin: 20px 0;
 }
 
+/* 新しいToDo入力フィールドのスタイルを設定 */
 #new-todo {
   width: 300px;
   padding: 10px;
@@ -19,6 +22,7 @@ body {
   color: #ffffff;
 }
 
+/* ボタンのスタイルを設定 */
 button {
   padding: 10px;
   border: none;
@@ -28,15 +32,18 @@ button {
   cursor: pointer;
 }
 
+/* ボタンのホバー時のスタイルを設定 */
 button:hover {
   background-color: #6a0dad;
 }
 
+/* ToDoリストのスタイルを設定 */
 #todo-list {
   list-style: none;
   padding: 0;
 }
 
+/* ToDoアイテムのスタイルを設定 */
 li {
   display: flex;
   align-items: center;
@@ -48,24 +55,29 @@ li {
   background-color: #2e2e2e;
 }
 
+/* 完了したToDoアイテムのスタイルを設定 */
 li.completed {
   text-decoration: line-through;
   color: #808080;
 }
 
+/* ToDoアイテムの表示部分のスタイルを設定 */
 .view {
   display: flex;
   align-items: center;
 }
 
+/* チェックボックスのスタイルを設定 */
 .toggle {
   margin-right: 10px;
 }
 
+/* ToDoアイテムの内容部分のスタイルを設定 */
 .content {
   flex-grow: 1;
 }
 
+/* 削除ボタンのスタイルを設定 */
 .destroy {
   background: none;
   border: none;
@@ -73,6 +85,7 @@ li.completed {
   cursor: pointer;
 }
 
+/* 削除ボタンのホバー時のスタイルを設定 */
 .destroy:hover {
   color: #ff6347;
 }
