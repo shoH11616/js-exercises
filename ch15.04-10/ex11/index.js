@@ -6,6 +6,10 @@ const template = document.querySelector("#todo-template");
 // { content: "...", completed: true or false } の配列
 const todos = [];
 
+/**
+ * ToDoリストをレンダリング
+ * @param {Array} todos - ToDoアイテムの配列
+ */
 function renderTodos(todos) {
   list.innerHTML = "";
   todos.forEach((todo, index) => {
@@ -15,6 +19,7 @@ function renderTodos(todos) {
     const label = clone.querySelector("label");
     const destroy = clone.querySelector("button");
 
+    // ToDoアイテムの完了状態を設定
     li.classList.toggle("completed", todo.completed);
     toggle.addEventListener("change", () => {
       todo.completed = toggle.checked;
@@ -31,6 +36,7 @@ function renderTodos(todos) {
   });
 }
 
+// フォームの送信イベントリスナーを追加
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (input.value.trim() === "") {
@@ -43,6 +49,7 @@ form.addEventListener("submit", (e) => {
   renderTodos(todos);
 });
 
+// ハッシュの変更イベントリスナーを追加
 window.addEventListener("hashchange", () => {
   const hash = window.location.hash;
   let filteredTodos = todos;

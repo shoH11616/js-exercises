@@ -5,6 +5,7 @@ test.describe("Simple ToDo App", () => {
     await page.goto("/ch15.04-10/ex11/index.html");
   });
 
+  // 新しいToDoを追加するテスト
   test("should add new todo", async ({ page }) => {
     await page.fill("#new-todo", "新しいToDo");
     await page.click("button");
@@ -16,6 +17,7 @@ test.describe("Simple ToDo App", () => {
     );
   });
 
+  // ToDoを完了としてマークするテスト
   test("should mark todo as completed", async ({ page }) => {
     await page.fill("#new-todo", "新しいToDo");
     await page.click("button");
@@ -27,6 +29,7 @@ test.describe("Simple ToDo App", () => {
     expect(await todoItem.first().locator(".completed")).toBeTruthy();
   });
 
+  // アクティブなToDoをフィルタリングするテスト
   test("should filter active todos", async ({ page }) => {
     await page.fill("#new-todo", "ToDo 1");
     await page.click("button");
@@ -45,6 +48,7 @@ test.describe("Simple ToDo App", () => {
     );
   });
 
+  // 完了したToDoをフィルタリングするテスト
   test("should filter completed todos", async ({ page }) => {
     await page.fill("#new-todo", "ToDo 1");
     await page.click("button");
@@ -63,6 +67,7 @@ test.describe("Simple ToDo App", () => {
     );
   });
 
+  // ToDoを削除するテスト
   test("should delete todo", async ({ page }) => {
     await page.fill("#new-todo", "新しいToDo");
     await page.click("button");

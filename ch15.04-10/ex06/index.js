@@ -46,27 +46,46 @@ template.innerHTML = `\
 <ul id="todo-list" class="list-group"></ul> <!-- タスクのリスト -->
 `;
 
+/**
+ * カスタム要素としてのToDoアプリケーションを定義
+ * ユーザーがToDoアイテムを追加、完了、削除できるようにする。
+ */
 class TodoApp extends HTMLElement {
+  /**
+   * シャドウDOMを作成し、テンプレートの内容をクローンして追加
+   * また、フォーム、入力フィールド、リストの参照を取得し、フォームの送信イベントにリスナーを追加する。
+   */
   constructor() {
     super();
+    // シャドウDOMを作成
     this.attachShadow({ mode: "open" });
+    // テンプレートの内容をシャドウDOMに追加
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
+    // フォーム、入力フィールド、リストの参照を取得
     this.form = this.shadowRoot.querySelector("#new-todo-form");
     this.input = this.shadowRoot.querySelector("#new-todo");
     this.list = this.shadowRoot.querySelector("#todo-list");
 
+    // フォームの送信イベントにリスナーを追加
     this.form.addEventListener("submit", (e) => this.addTodo(e));
   }
 
+  /**
+   * 新しいToDoアイテムをリストに追加
+   * @param {Event} e - フォームの送信イベント
+   */
   addTodo(e) {
     e.preventDefault();
+    // 入力フィールドが空の場合は何もしない
     if (this.input.value.trim() === "") {
       return;
     }
     const todoText = this.input.value.trim();
+    // 入力フィールドをクリア
     this.input.value = "";
 
+    // 新しいリストアイテムを作成
     const li = document.createElement("li");
     li.classList.add(
       "list-group-item",
@@ -75,6 +94,7 @@ class TodoApp extends HTMLElement {
       "align-items-center"
     );
 
+    // チェックボックスを作成し、リストアイテムに追加
     const toggle = document.createElement("input");
     toggle.type = "checkbox";
     toggle.classList.add("mr-2");
@@ -82,9 +102,11 @@ class TodoApp extends HTMLElement {
       li.classList.toggle("completed", toggle.checked);
     });
 
+    // ラベルを作成し、リストアイテムに追加
     const label = document.createElement("label");
     label.textContent = todoText;
 
+    // 削除ボタンを作成し、リストアイテムに追加
     const destroy = document.createElement("button");
     destroy.textContent = "❌";
     destroy.classList.add("btn", "btn-danger", "btn-sm");
@@ -92,11 +114,14 @@ class TodoApp extends HTMLElement {
       li.remove();
     });
 
+    // リストアイテムにチェックボックス、ラベル、削除ボタンを追加
     li.appendChild(toggle);
     li.appendChild(label);
     li.appendChild(destroy);
+    // リストの先頭にリストアイテムを追加
     this.list.prepend(li);
   }
 }
 
+// カスタム要素としてTodoAppを定義
 customElements.define("todo-app", TodoApp);

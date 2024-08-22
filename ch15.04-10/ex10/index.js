@@ -25,7 +25,10 @@ let grid = new Array(ROWS)
     new Array(COLS).fill(null).map(() => !!Math.floor(Math.random() * 2))
   );
 
-// grid を canvas に描画する
+/**
+ * grid を canvas に描画
+ * @param {Array} grid - セルの状態を表す2次元配列
+ */
 function renderGrid(grid) {
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
@@ -39,7 +42,11 @@ function renderGrid(grid) {
   }
 }
 
-// Life Game のルールに従ってセルを更新する
+/**
+ * Life Game のルールに従ってセルを更新
+ * @param {Array} grid - 現在のセルの状態を表す2次元配列
+ * @returns {Array} - 更新されたセルの状態を表す2次元配列
+ */
 function updateGrid(grid) {
   // 新しいグリッドを作成
   const nextGrid = grid.map((arr) => [...arr]);
@@ -88,9 +95,11 @@ canvas.addEventListener("click", function (evt) {
   renderGrid(grid);
 });
 
-// requestAnimationFrame によって一定間隔で更新・描画を行う
-// NOTE: リフレッシュレートの高い画面では速く実行される (これを防ぐ場合は下記の例を参照)
-// https://developer.mozilla.org/ja/docs/Web/API/Window/requestAnimationFrame
+/**
+ * requestAnimationFrame によって一定間隔で更新・描画を行う
+ * NOTE: リフレッシュレートの高い画面では速く実行される (これを防ぐ場合は下記の例を参照)
+ * https://developer.mozilla.org/ja/docs/Web/API/Window/requestAnimationFrame
+ */
 function update() {
   grid = updateGrid(grid);
   renderGrid(grid);
@@ -114,4 +123,5 @@ pauseButton.addEventListener("click", () => {
   animationId = null;
 });
 
+// 初期状態のグリッドを描画
 renderGrid(grid);

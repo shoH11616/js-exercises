@@ -1,3 +1,4 @@
+// 画像ファイルの選択イベントリスナーを追加
 document.getElementById("image").addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (!file) {
@@ -7,21 +8,25 @@ document.getElementById("image").addEventListener("change", (event) => {
   const img = new Image();
   const reader = new FileReader();
 
+  // ファイルの読み込みが完了したときのイベントリスナー
   reader.addEventListener("load", (e) => {
     img.src = e.target.result;
   });
 
+  // 画像の読み込みが完了したときのイベントリスナー
   img.addEventListener("load", () => {
     const originalCanvas = document.getElementById("original");
     const filteredCanvas = document.getElementById("filtered");
     const originalCtx = originalCanvas.getContext("2d");
     const filteredCtx = filteredCanvas.getContext("2d");
 
+    // キャンバスのサイズを画像のサイズに設定
     originalCanvas.width = img.width;
     originalCanvas.height = img.height;
     filteredCanvas.width = img.width;
     filteredCanvas.height = img.height;
 
+    // 画像をキャンバスに描画
     originalCtx.drawImage(img, 0, 0);
 
     const imageData = originalCtx.getImageData(0, 0, img.width, img.height);
@@ -47,6 +52,7 @@ document.getElementById("image").addEventListener("change", (event) => {
           g = 0,
           b = 0;
 
+        // カーネルを適用してピクセルの色を計算
         for (let ky = 0; ky < kernelSize; ky++) {
           for (let kx = 0; kx < kernelSize; kx++) {
             const px = x + kx - Math.floor(kernelSize / 2);
@@ -69,9 +75,11 @@ document.getElementById("image").addEventListener("change", (event) => {
       }
     }
 
+    // フィルタ適用後の画像データをキャンバスに描画
     const outputImageData = new ImageData(outputData, img.width, img.height);
     filteredCtx.putImageData(outputImageData, 0, 0);
   });
 
+  // ファイルをデータURLとして読み込む
   reader.readAsDataURL(file);
 });
