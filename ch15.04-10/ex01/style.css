@@ -1,91 +1,127 @@
 /* 背景色と文字色を設定し、フォントをArialに指定 */
 body {
+  /* ページ全体の背景色をダークグレーに設定 */
   background-color: #1a1a1a;
+  /* ページ全体の文字色を白に設定 */
   color: #ffffff;
+  /* ページ全体のフォントをArialに設定 */
   font-family: "Arial", sans-serif;
 }
 
 /* 新しいToDoフォームを中央に配置し、マージンを設定 */
 #new-todo-form {
+  /* フォームをフレックスボックスで中央に配置 */
   display: flex;
   justify-content: center;
+  /* フォームの上下に20pxのマージンを設定 */
   margin: 20px 0;
 }
 
 /* 新しいToDo入力フィールドのスタイルを設定 */
 #new-todo {
+  /* 入力フィールドの幅を300pxに設定 */
   width: 300px;
+  /* 入力フィールドの内側の余白を10pxに設定 */
   padding: 10px;
+  /* 入力フィールドの境界線を2pxの紫色に設定 */
   border: 2px solid #4b0082;
+  /* 入力フィールドの角を丸くする */
   border-radius: 5px;
+  /* 入力フィールドの背景色をダークグレーに設定 */
   background-color: #2e2e2e;
+  /* 入力フィールドの文字色を白に設定 */
   color: #ffffff;
 }
 
 /* ボタンのスタイルを設定 */
 button {
+  /* ボタンの内側の余白を10pxに設定 */
   padding: 10px;
+  /* ボタンの境界線をなしに設定 */
   border: none;
+  /* ボタンの角を丸くする */
   border-radius: 5px;
+  /* ボタンの背景色を紫色に設定 */
   background-color: #4b0082;
+  /* ボタンの文字色を白に設定 */
   color: #ffffff;
+  /* ボタンにカーソルを合わせたときにポインターに変更 */
   cursor: pointer;
 }
 
 /* ボタンのホバー時のスタイルを設定 */
 button:hover {
+  /* ボタンにカーソルを合わせたときの背景色を明るい紫色に設定 */
   background-color: #6a0dad;
 }
 
 /* ToDoリストのスタイルを設定 */
 #todo-list {
+  /* リストのスタイルをなしに設定 */
   list-style: none;
+  /* リストの内側の余白を0に設定 */
   padding: 0;
 }
 
 /* ToDoアイテムのスタイルを設定 */
 li {
+  /* アイテムをフレックスボックスで配置 */
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* アイテムの内側の余白を10pxに設定 */
   padding: 10px;
+  /* アイテムの上下のマージンを5pxに設定 */
   margin: 5px 0;
+  /* アイテムの境界線を2pxの紫色に設定 */
   border: 2px solid #4b0082;
+  /* アイテムの角を丸くする */
   border-radius: 5px;
+  /* アイテムの背景色をダークグレーに設定 */
   background-color: #2e2e2e;
 }
 
 /* 完了したToDoアイテムのスタイルを設定 */
 li.completed {
+  /* 完了したアイテムに取り消し線を追加 */
   text-decoration: line-through;
+  /* 完了したアイテムの文字色をグレーに設定 */
   color: #808080;
 }
 
 /* ToDoアイテムの表示部分のスタイルを設定 */
 .view {
+  /* 表示部分をフレックスボックスで配置 */
   display: flex;
   align-items: center;
 }
 
 /* チェックボックスのスタイルを設定 */
 .toggle {
+  /* チェックボックスの右側に10pxのマージンを設定 */
   margin-right: 10px;
 }
 
 /* ToDoアイテムの内容部分のスタイルを設定 */
 .content {
+  /* 内容部分をフレックスボックスで成長させる */
   flex-grow: 1;
 }
 
 /* 削除ボタンのスタイルを設定 */
 .destroy {
+  /* 削除ボタンの背景をなしに設定 */
   background: none;
+  /* 削除ボタンの境界線をなしに設定 */
   border: none;
+  /* 削除ボタンの文字色をオレンジ色に設定 */
   color: #ff4500;
+  /* 削除ボタンにカーソルを合わせたときにポインターに変更 */
   cursor: pointer;
 }
 
 /* 削除ボタンのホバー時のスタイルを設定 */
 .destroy:hover {
+  /* 削除ボタンにカーソルを合わせたときの文字色を明るいオレンジ色に設定 */
   color: #ff6347;
 }
