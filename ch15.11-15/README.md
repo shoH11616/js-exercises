@@ -151,7 +151,7 @@ node ex01/server.js
         ["GET", "/api/tasks/{id}", getTaskHandler, authz, cors],
         ["POST", "/api/tasks", createTaskHandler, authz, cors],
         ["PATCH", "/api/tasks/{id}", patchTaskHandler, authz, cors],
-        ["DELETE", "/api/tasks/{id}", deleteTaskHandler, authz, cors],
+        ["DELETE", "/api/tasks/{id}", deleteTaskHandler, authz, cors]
       )(req, res);
     })
     .listen(3001);

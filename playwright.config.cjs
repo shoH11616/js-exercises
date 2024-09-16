@@ -13,5 +13,5 @@ export default defineConfig({
   testDir: ".",
   testMatch: /(.+\.)?spec\.[jt]s/,
   workers: 1,
-  maxFailures: 1,
+  maxFailures: 100,
 });

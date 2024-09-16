@@ -20,7 +20,7 @@ async function serveContentsHandler(url, _req, res) {
     const filePath = path.join(
       __dirname,
       "contents",
-      reqPath === "/" ? "index.html" : path.join(...reqPath.split("/")),
+      reqPath === "/" ? "index.html" : path.join(...reqPath.split("/"))
     );
 
     const content = await fs.readFile(filePath);
@@ -43,8 +43,10 @@ async function serveContentsHandler(url, _req, res) {
 
 // CSP のヘッダを返すミドルウェア
 function cspMiddleware(_url, req, res) {
-  // TODO: CSP ヘッダを設定する
-  // res.setHeader("Content-Security-Policy", "TODO");
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'unsafe-inline' http://localhost:3000/hello.js;"
+  );
   return true;
 }
 
@@ -115,7 +117,7 @@ async function main() {
     .createServer(async function (req, res) {
       await routes(["GET", "/*", serveContentsHandler, cspMiddleware])(
         req,
-        res,
+        res
       );
     })
     .listen(3000);
