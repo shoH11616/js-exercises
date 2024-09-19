@@ -1,35 +1,55 @@
+/**
+ * フォーム要素を取得
+ * @type {HTMLFormElement}
+ */
 const form = document.querySelector("#new-todo-form");
+
+/**
+ * タスクリスト要素を取得
+ * @type {HTMLElement}
+ */
 const list = document.querySelector("#todo-list");
+
+/**
+ * 新しいタスクの入力フィールドを取得
+ * @type {HTMLInputElement}
+ */
 const input = document.querySelector("#new-todo");
 
+/**
+ * ページが読み込まれたときに実行されるイベントリスナー
+ */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    disableForm();
+    disableForm(); // フォームを無効化
     const response = await retryWithExponentialBackoff(
       () => fetchWithTimeout("/api/tasks"),
       3
     );
     const data = await response.json();
-    data.items.forEach((task) => appendToDoItem(task));
+    data.items.forEach((task) => appendToDoItem(task)); // 取得したタスクをリストに追加
   } catch (error) {
-    alert(error.message);
+    alert(error.message); // エラーメッセージを表示
   } finally {
-    enableForm();
+    enableForm(); // フォームを有効化
   }
 });
 
+/**
+ * フォームの送信イベントリスナー
+ */
 form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+  e.preventDefault(); // デフォルトのフォーム送信を防止
 
   const todo = input.value.trim();
   if (todo === "") {
-    return;
+    return; // 入力が空の場合は何もしない
   }
 
-  input.value = "";
+  input.value = ""; // 入力フィールドをクリア
 
   try {
-    disableForm();
+    disableForm(); // フォームを無効化
     const response = await retryWithExponentialBackoff(
       () =>
         fetchWithTimeout("/api/tasks", {
@@ -37,33 +57,40 @@ form.addEventListener("submit", async (e) => {
           headers: {
             "Content-Type": "application/json; charset=UTF-8",
           },
-          body: JSON.stringify({ name: todo }),
+          body: JSON.stringify({ name: todo }), // 新しいタスクを送信
         }),
       3
     );
     const newTask = await response.json();
-    appendToDoItem(newTask);
+    appendToDoItem(newTask); // 新しいタスクをリストに追加
   } catch (error) {
-    alert(error.message);
+    alert(error.message); // エラーメッセージを表示
   } finally {
-    enableForm();
+    enableForm(); // フォームを有効化
   }
 });
 
+/**
+ * タスクをリストに追加する関数
+ * @param {Object} task - 追加するタスクオブジェクト
+ * @param {string} task.name - タスクの名前
+ * @param {string} task.status - タスクのステータス（"completed"または"active"）
+ * @param {number} task.id - タスクのID
+ */
 function appendToDoItem(task) {
-  const elem = document.createElement("li");
+  const elem = document.createElement("li"); // 新しいリストアイテムを作成
 
   const label = document.createElement("label");
-  label.textContent = task.name;
+  label.textContent = task.name; // タスクの名前を設定
   label.style.textDecorationLine =
-    task.status === "completed" ? "line-through" : "none";
+    task.status === "completed" ? "line-through" : "none"; // タスクのステータスに応じてスタイルを設定
 
   const toggle = document.createElement("input");
   toggle.type = "checkbox";
-  toggle.checked = task.status === "completed";
+  toggle.checked = task.status === "completed"; // チェックボックスの状態を設定
   toggle.addEventListener("change", async () => {
     try {
-      disableForm();
+      disableForm(); // フォームを無効化
       const response = await retryWithExponentialBackoff(
         () =>
           fetchWithTimeout(`/api/tasks/${task.id}`, {
@@ -72,18 +99,18 @@ function appendToDoItem(task) {
               "Content-Type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify({
-              status: toggle.checked ? "completed" : "active",
+              status: toggle.checked ? "completed" : "active", // タスクのステータスを更新
             }),
           }),
         3
       );
       const updatedTask = await response.json();
       label.style.textDecorationLine =
-        updatedTask.status === "completed" ? "line-through" : "none";
+        updatedTask.status === "completed" ? "line-through" : "none"; // 更新されたステータスに応じてスタイルを設定
     } catch (error) {
-      alert(error.message);
+      alert(error.message); // エラーメッセージを表示
     } finally {
-      enableForm();
+      enableForm(); // フォームを有効化
     }
   });
 
@@ -91,7 +118,7 @@ function appendToDoItem(task) {
   destroy.textContent = "Delete";
   destroy.addEventListener("click", async () => {
     try {
-      disableForm();
+      disableForm(); // フォームを無効化
       const response = await retryWithExponentialBackoff(
         () =>
           fetchWithTimeout(`/api/tasks/${task.id}`, {
@@ -100,69 +127,93 @@ function appendToDoItem(task) {
         3
       );
       if (response.ok) {
-        elem.remove();
+        elem.remove(); // タスクをリストから削除
       }
     } catch (error) {
-      alert(error.message);
+      alert(error.message); // エラーメッセージを表示
     } finally {
-      enableForm();
+      enableForm(); // フォームを有効化
     }
   });
 
-  elem.appendChild(toggle);
-  elem.appendChild(label);
-  elem.appendChild(destroy);
-  list.prepend(elem);
+  elem.appendChild(toggle); // チェックボックスをリストアイテムに追加
+  elem.appendChild(label); // ラベルをリストアイテムに追加
+  elem.appendChild(destroy); // 削除ボタンをリストアイテムに追加
+  list.prepend(elem); // タスクをリストの先頭に追加
 }
 
+/**
+ * 指定された関数を最大リトライ回数まで実行し、成功するまで指数バックオフでリトライする関数
+ * @param {Function} fetchFunc - 実行する関数
+ * @param {number} maxRetry - 最大リトライ回数
+ * @returns {Promise<Response>} - 成功した場合のレスポンス
+ * @throws {Error} - 最大リトライ回数を超えた場合のエラー
+ */
 async function retryWithExponentialBackoff(fetchFunc, maxRetry) {
   let attempt = 0;
 
+  // 1. API からステータスコード 500 番台のエラーレスポンスが返ってきた場合は  `retryWithExponentialBackoff` を流用して `fetch` のリトライを行う
   while (attempt < maxRetry) {
     try {
       const response = await fetchFunc();
       if (response.ok) {
-        return response;
+        return response; // 成功した場合はレスポンスを返す
       } else if (response.status >= 500) {
-        throw new Error(`Server error: ${response.status}`);
+        throw new Error(`Server error: ${response.status}`); // サーバーエラーの場合はエラーをスロー
       }
     } catch (error) {
       if (attempt >= maxRetry) {
-        throw error;
+        throw error; // 最大リトライ回数を超えた場合はエラーをスロー
       }
-      const delay = Math.pow(2, attempt) * 1000;
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      const delay = Math.pow(2, attempt) * 1000; // 指数バックオフで遅延を設定
+      await new Promise((resolve) => setTimeout(resolve, delay)); // 遅延を待つ
       attempt++;
     }
   }
 }
 
+/**
+ * 指定されたリソースをタイムアウト付きでフェッチする関数
+ * @param {string} resource - フェッチするリソースのURL
+ * @param {Object} options - フェッチオプション
+ * @param {number} [options.timeout=3000] - タイムアウト時間（ミリ秒）
+ * @returns {Promise<Response>} - フェッチのレスポンス
+ * @throws {Error} - タイムアウトまたはフェッチエラー
+ */
 async function fetchWithTimeout(resource, options = {}) {
+  //2. リクエスト送出から 3 秒以上経過してもレスポンスを受信できない場合のタイムアウト処理
   const { timeout = 3000 } = options;
 
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
+  const id = setTimeout(() => controller.abort(), timeout); // タイムアウトを設定
   const response = await fetch(resource, {
     ...options,
-    signal: controller.signal,
+    signal: controller.signal, // AbortControllerのシグナルを設定
   });
-  clearTimeout(id);
+  clearTimeout(id); // タイムアウトをクリア
 
   return response;
 }
 
+// 3. 通信やリトライが完了するまでのフォームの無効化
+/**
+ * フォームを無効化する関数
+ */
 function disableForm() {
-  form.querySelector("button").disabled = true;
-  input.disabled = true;
+  form.querySelector("button").disabled = true; // フォームのボタンを無効化
+  input.disabled = true; // 入力フィールドを無効化
   list
     .querySelectorAll("input, button")
-    .forEach((elem) => (elem.disabled = true));
+    .forEach((elem) => (elem.disabled = true)); // リスト内のすべての入力とボタンを無効化
 }
 
+/**
+ * フォームを有効化する関数
+ */
 function enableForm() {
-  form.querySelector("button").disabled = false;
-  input.disabled = false;
+  form.querySelector("button").disabled = false; // フォームのボタンを有効化
+  input.disabled = false; // 入力フィールドを有効化
   list
     .querySelectorAll("input, button")
-    .forEach((elem) => (elem.disabled = false));
+    .forEach((elem) => (elem.disabled = false)); // リスト内のすべての入力とボタンを有効化
 }

@@ -17,74 +17,16 @@ const list = document.querySelector("#todo-list");
 const input = document.querySelector("#new-todo");
 
 /**
- * IndexedDBのデータベース名
- * @type {string}
- */
-const dbName = "todoDB";
-
-/**
- * IndexedDBのオブジェクトストア名
- * @type {string}
- */
-const storeName = "todos";
-
-/**
- * IndexedDBのデータベースオブジェクト
- * @type {IDBDatabase}
- */
-let db;
-
-/**
- * IndexedDBのデータベースを開くリクエスト
- * @type {IDBOpenDBRequest}
- */
-const request = indexedDB.open(dbName, 1);
-
-/**
- * データベースのバージョンが変更されたときに呼び出されるイベントリスナー
- * オブジェクトストアを作成する
- */
-request.onupgradeneeded = (event) => {
-  db = event.target.result;
-  db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
-};
-
-/**
- * データベースの接続が成功したときに呼び出されるイベントリスナー
- * ToDoリストをロードする
- */
-request.onsuccess = (event) => {
-  db = event.target.result;
-  loadTodos();
-};
-
-/**
- * データベースの接続が失敗したときに呼び出されるイベントリスナー
- * エラーメッセージをコンソールに表示する
- */
-request.onerror = (event) => {
-  console.error("IndexedDB error:", event.target.errorCode);
-};
-
-/**
  * ToDoリストをロードする関数
  */
 function loadTodos() {
-  const transaction = db.transaction([storeName], "readonly");
-  const objectStore = transaction.objectStore(storeName);
-  const request = objectStore.getAll();
-
-  request.onsuccess = (event) => {
-    const todos = event.target.result;
-    const existingIds = new Set(
-      [...list.children].map((item) => parseInt(item.dataset.id))
-    );
-    todos.forEach((todo) => {
-      if (!existingIds.has(todo.id)) {
-        addTodoToList(todo);
-      }
-    });
-  };
+  console.log("Loading todos from sessionStorage");
+  const todos = JSON.parse(sessionStorage.getItem("todos")) || [];
+  console.log("Todos loaded:", todos);
+  list.innerHTML = ""; // リストをクリアしてから再構築
+  todos.forEach((todo) => {
+    addTodoToList(todo);
+  });
 }
 
 /**
@@ -95,6 +37,7 @@ function loadTodos() {
  * @param {boolean} todo.completed - ToDoの完了状態
  */
 function addTodoToList(todo) {
+  console.log("Adding todo to list:", todo);
   const elem = document.createElement("li");
   elem.dataset.id = todo.id;
 
@@ -124,19 +67,17 @@ function addTodoToList(todo) {
 }
 
 /**
- * ToDoをIndexedDBに保存する関数
+ * ToDoをsessionStorageに保存する関数
  * @param {Object} todo - 保存するToDoオブジェクト
  * @param {string} todo.text - ToDoのテキスト
  * @param {boolean} todo.completed - ToDoの完了状態
  */
-function saveTodoToDB(todo) {
-  const transaction = db.transaction([storeName], "readwrite");
-  const objectStore = transaction.objectStore(storeName);
-  const request = objectStore.add(todo);
-
-  request.onsuccess = () => {
-    broadcastChange();
-  };
+function saveTodoToStorage(todo) {
+  console.log("Saving todo to sessionStorage:", todo);
+  const todos = JSON.parse(sessionStorage.getItem("todos")) || [];
+  todos.push(todo);
+  sessionStorage.setItem("todos", JSON.stringify(todos));
+  broadcastChange();
 }
 
 /**
@@ -145,19 +86,12 @@ function saveTodoToDB(todo) {
  * @param {Object} updates - 更新する内容
  */
 function updateTodo(id, updates) {
-  const transaction = db.transaction([storeName], "readwrite");
-  const objectStore = transaction.objectStore(storeName);
-  const request = objectStore.get(id);
-
-  request.onsuccess = (event) => {
-    const todo = event.target.result;
-    Object.assign(todo, updates);
-    const updateRequest = objectStore.put(todo);
-
-    updateRequest.onsuccess = () => {
-      broadcastChange();
-    };
-  };
+  console.log("Updating todo in sessionStorage:", id, updates);
+  const todos = JSON.parse(sessionStorage.getItem("todos")) || [];
+  const todo = todos.find((t) => t.id === id);
+  Object.assign(todo, updates);
+  sessionStorage.setItem("todos", JSON.stringify(todos));
+  broadcastChange();
 }
 
 /**
@@ -165,13 +99,11 @@ function updateTodo(id, updates) {
  * @param {number} id - 削除するToDoのID
  */
 function deleteTodo(id) {
-  const transaction = db.transaction([storeName], "readwrite");
-  const objectStore = transaction.objectStore(storeName);
-  const request = objectStore.delete(id);
-
-  request.onsuccess = () => {
-    broadcastChange();
-  };
+  console.log("Deleting todo from sessionStorage:", id);
+  let todos = JSON.parse(sessionStorage.getItem("todos")) || [];
+  todos = todos.filter((t) => t.id !== id);
+  sessionStorage.setItem("todos", JSON.stringify(todos));
+  broadcastChange();
 }
 
 /**
@@ -185,12 +117,13 @@ form.addEventListener("submit", (e) => {
   }
 
   const todo = {
+    id: Date.now(),
     text: input.value.trim(),
     completed: false,
   };
 
   input.value = "";
-  saveTodoToDB(todo);
+  saveTodoToStorage(todo);
   addTodoToList(todo);
 });
 
@@ -201,6 +134,7 @@ form.addEventListener("submit", (e) => {
 const channel = new BroadcastChannel("todo-channel");
 
 channel.onmessage = () => {
+  console.log("Received message from BroadcastChannel");
   loadTodos();
 };
 
@@ -208,5 +142,9 @@ channel.onmessage = () => {
  * 変更を通知する関数
  */
 function broadcastChange() {
+  console.log("Broadcasting change");
   channel.postMessage("change");
 }
+
+// 初期ロード時にToDoリストをロード
+loadTodos();
