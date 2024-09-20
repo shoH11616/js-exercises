@@ -152,18 +152,18 @@ function appendToDoItem(task) {
 async function retryWithExponentialBackoff(fetchFunc, maxRetry) {
   let attempt = 0;
 
-  // 1. API からステータスコード 500 番台のエラーレスポンスが返ってきた場合は  `retryWithExponentialBackoff` を流用して `fetch` のリトライを行う
   while (attempt < maxRetry) {
     try {
       const response = await fetchFunc();
-      if (response.ok) {
-        return response; // 成功した場合はレスポンスを返す
-      } else if (response.status >= 500) {
-        throw new Error(`Server error: ${response.status}`); // サーバーエラーの場合はエラーをスロー
+      if (response && response.ok) {
+        // responseがundefinedでないことを確認
+        return response;
+      } else if (response && response.status >= 500) {
+        throw new Error(`Server error: ${response.status}`);
       }
     } catch (error) {
       if (attempt >= maxRetry) {
-        throw error; // 最大リトライ回数を超えた場合はエラーをスロー
+        throw error;
       }
       const delay = Math.pow(2, attempt) * 1000; // 指数バックオフで遅延を設定
       await new Promise((resolve) => setTimeout(resolve, delay)); // 遅延を待つ
@@ -181,21 +181,32 @@ async function retryWithExponentialBackoff(fetchFunc, maxRetry) {
  * @throws {Error} - タイムアウトまたはフェッチエラー
  */
 async function fetchWithTimeout(resource, options = {}) {
-  //2. リクエスト送出から 3 秒以上経過してもレスポンスを受信できない場合のタイムアウト処理
   const { timeout = 3000 } = options;
 
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout); // タイムアウトを設定
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal, // AbortControllerのシグナルを設定
-  });
-  clearTimeout(id); // タイムアウトをクリア
+  const id = setTimeout(() => {
+    console.log("Request timed out");
+    controller.abort();
+  }, timeout);
 
-  return response;
+  try {
+    const response = await fetch(resource, {
+      ...options,
+      signal: controller.signal, // AbortControllerのシグナルを設定
+    });
+    clearTimeout(id); // タイムアウトをクリア
+    return response;
+  } catch (error) {
+    clearTimeout(id); // タイムアウトをクリア
+    if (error.name === "AbortError") {
+      console.error("Fetch aborted due to timeout");
+      alert("Request timed out");
+      throw new Error("Request timed out");
+    }
+    throw error;
+  }
 }
 
-// 3. 通信やリトライが完了するまでのフォームの無効化
 /**
  * フォームを無効化する関数
  */
