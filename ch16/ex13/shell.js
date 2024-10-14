@@ -44,7 +44,6 @@ async function runcmd(cmd, stdin = null, stdout = null) {
   switch (cmd.type) {
     case " ": // ExecCmd
       await new Promise((resolve, reject) => {
-        // stdin, stdout が指定されている場合はパイプを作成する
         const child = spawn(cmd.argv[0], cmd.argv.slice(1), {
           stdio: [
             stdin ? "pipe" : "inherit",
@@ -52,41 +51,36 @@ async function runcmd(cmd, stdin = null, stdout = null) {
             "inherit",
           ],
         });
-
         if (stdin) {
           stdin.pipe(child.stdin);
         }
         if (stdout) {
           child.stdout.pipe(stdout);
         }
-
         child.on("exit", () => resolve());
         child.on("error", (err) => reject(err));
       });
       break;
-
-    case ">": // RedirCmd
-      {
-        // FIXME: ここを実装してね (2行程度)
-        // HINT: cmd.file のストリームを createWriteStream で作成し runcmd を再帰的に呼び出す
-      }
+    case ">": { // RedirCmd
+      const outStream = fs.createWriteStream(cmd.file);
+      await runcmd(cmd.cmd, stdin, outStream);
+      outStream.end();
       break;
-
-    case "<": // RedirCmd
-      {
-        // FIXME: ここを実装してね (2行程度)
-        // HINT: cmd.file のストリームを createReadStream で作成し runcmd を再帰的に呼び出す
-      }
+    }
+    case "<": { // RedirCmd
+      const inStream = fs.createReadStream(cmd.file);
+      await runcmd(cmd.cmd, inStream, stdout);
+      inStream.end();
       break;
-
-    case "|": // PipeCmd
-      {
-        // FIXME: ここを実装してね (4行程度)
-        // HINT: cmd.left と cmd.right に対して runcmd を再帰的に呼び出し Promise.all で待つ
-        // HINT: left と right を繋ぐには new PassThrought() で作成したストリームを使用する
-      }
+    }
+    case "|": { // PipeCmd
+      const passThrough = new PassThrough();
+      await Promise.all([
+        runcmd(cmd.left, stdin, passThrough),
+        runcmd(cmd.right, passThrough, stdout),
+      ]);
       break;
-
+    }
     default:
       console.error("unknown runcmd");
       process.exit(-1);
