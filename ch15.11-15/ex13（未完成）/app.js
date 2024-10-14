@@ -13,7 +13,11 @@ document.getElementById("send-button").addEventListener("click", async () => {
   responseMessage.textContent = "LLM: ";
   chatBox.appendChild(responseMessage);
 
+<<<<<<< HEAD
   const response = await fetch("http://localhost:11434/v1/completions", {
+=======
+  const response = await fetch("http://localhost:3300/v1/completions", {
+>>>>>>> 1713e1b8f9384f58426b36897e28b0586433d07d
     method: "POST",
     headers: {
       "Content-Type": "application/json",
