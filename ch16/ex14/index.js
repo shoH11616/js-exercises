@@ -12,15 +12,20 @@ const gaussianKernel = [
 ];
 const kernelSize = gaussianKernel.length;
 
-// 画像を読み込んでフィルタを適用する関数
+/**
+ * 画像を読み込んでガウシアンフィルタを適用する関数
+ *
+ * @param {string} imagePath - 入力画像のパス
+ * @param {string} outputPath - 出力画像のパス
+ */
 async function applyGaussianFilter(imagePath, outputPath) {
-  const image = await loadImage(imagePath);
-  const canvas = createCanvas(image.width, image.height);
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(image, 0, 0);
+  const image = await loadImage(imagePath); // 画像を読み込む
+  const canvas = createCanvas(image.width, image.height); // キャンバスを作成
+  const ctx = canvas.getContext("2d"); // 2Dコンテキストを取得
+  ctx.drawImage(image, 0, 0); // 画像をキャンバスに描画
+  const imageData = ctx.getImageData(0, 0, image.width, image.height); // 画像データを取得
 
-  const imageData = ctx.getImageData(0, 0, image.width, image.height);
-
+  // ワーカースレッドを作成し、画像データとフィルタ情報を渡す
   const worker = new Worker("./worker.js", {
     workerData: {
       imageData: imageData.data,
@@ -31,6 +36,7 @@ async function applyGaussianFilter(imagePath, outputPath) {
     },
   });
 
+  // フィルタリングが完了したら結果を受け取る
   worker.on("message", (filteredData) => {
     ctx.putImageData(
       new ImageData(
@@ -41,16 +47,19 @@ async function applyGaussianFilter(imagePath, outputPath) {
       0,
       0
     );
+    // 画像をPNG形式で保存
     const out = fs.createWriteStream(outputPath);
     const stream = canvas.createPNGStream();
     stream.pipe(out);
     out.on("finish", () => console.log("The PNG file was created."));
   });
 
+  // エラーが発生した場合の処理
   worker.on("error", (err) => {
     console.error(err);
   });
 
+  // ワーカーが終了した場合の処理
   worker.on("exit", (code) => {
     if (code !== 0) console.log(`Worker stopped with exit code ${code}`);
   });

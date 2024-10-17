@@ -7,6 +7,9 @@ import fs from "fs";
  * 指定されたポートで待ち受けるHTTPサーバを介して、
  * 指定されたルートディレクトリのファイルを提供し、
  * ファイルのアップロードも可能にする。
+ *
+ * @param {string} rootDirectory - ファイルを提供するルートディレクトリ
+ * @param {number} port - サーバが待ち受けるポート番号
  */
 function serve(rootDirectory, port) {
   const server = new http.Server(); // 新しいHTTPサーバを作成する。
@@ -29,7 +32,7 @@ function serve(rootDirectory, port) {
         response.write(`${headers[i]}: ${headers[i + 1]}\r\n`);
       }
       response.write("\r\n");
-      request.pipe(response);
+      request.pipe(response); // リクエストの内容をそのままレスポンスとして返す
     }
     // PUTリクエストの場合、ファイルをアップロードする。
     else if (request.method === "PUT") {
@@ -47,12 +50,15 @@ function serve(rootDirectory, port) {
           return;
         }
 
+        // アップロードされたファイルを書き込む
         const fileStream = fs.createWriteStream(filename);
         request.pipe(fileStream);
+
         fileStream.on("finish", () => {
           response.writeHead(200, { "Content-Type": "text/plain" });
           response.end("File uploaded successfully");
         });
+
         fileStream.on("error", (err) => {
           response.writeHead(500, { "Content-Type": "text/plain" });
           response.end(`Error uploading file: ${err.message}`);
@@ -76,14 +82,16 @@ function serve(rootDirectory, port) {
         }[path.extname(filename)] || "application/octet-stream";
 
       const stream = fs.createReadStream(filename);
+
       stream.on("open", () => {
         response.setHeader("Content-Type", type);
-        response.writeHead(200);
-        stream.pipe(response);
+        response.writeHead(200); // 200 OK
+        stream.pipe(response); // ファイルの内容をレスポンスとして返す
       });
+
       stream.on("error", (err) => {
         response.setHeader("Content-Type", "text/plain; charset=UTF-8");
-        response.writeHead(404);
+        response.writeHead(404); // 404 Not Found
         response.end(err.message);
       });
     }

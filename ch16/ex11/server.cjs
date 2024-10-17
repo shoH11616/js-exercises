@@ -1,8 +1,7 @@
 const net = require("net");
 
 // HTMLフォーム
-const formHTML = `
-<!doctype html>
+const formHTML = `<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
@@ -21,26 +20,32 @@ const formHTML = `
 
 // サーバー作成
 const server = net.createServer((socket) => {
+  // クライアントからデータを受信したときの処理
   socket.on("data", (data) => {
+    // リクエスト全体を文字列に変換
     const request = data.toString();
+    // ヘッダーとボディを分割
     const [header, body] = request.split("\r\n\r\n");
+    // リクエストラインとヘッダーを分割
     const [requestLine, ...headers] = header.split("\r\n");
+    // メソッドとパスを取得
     const [method, path] = requestLine.split(" ");
 
     if (method === "GET" && path === "/") {
-      // "/" が GET されたときの処理
+      // ルートパス ("/") へのGETリクエストの場合
       socket.write("HTTP/1.1 200 OK\r\n");
       socket.write("Content-Type: text/html; charset=UTF-8\r\n");
       socket.write("Content-Length: " + Buffer.byteLength(formHTML) + "\r\n");
       socket.write("\r\n");
-      socket.write(formHTML);
-      socket.end();
+      socket.write(formHTML); // HTMLフォームを送信
+      socket.end(); // レスポンスを終了
     } else if (method === "POST" && path === "/greeting") {
-      // "/greeting" に POST されたときの処理
-      const params = new URLSearchParams(body);
-      const name = params.get("name") || "unknown";
-      const greeting = params.get("greeting") || "Hello";
+      // "/greeting" へのPOSTリクエストの場合
+      const params = new URLSearchParams(body); // ボディをパースしてパラメータを取得
+      const name = params.get("name") || "unknown"; // "name" パラメータを取得
+      const greeting = params.get("greeting") || "Hello"; // "greeting" パラメータを取得
 
+      // レスポンス用のHTMLを作成
       const responseHTML = `
       <!doctype html>
       <html lang="ja">
@@ -60,19 +65,19 @@ const server = net.createServer((socket) => {
         "Content-Length: " + Buffer.byteLength(responseHTML) + "\r\n"
       );
       socket.write("\r\n");
-      socket.write(responseHTML);
-      socket.end();
+      socket.write(responseHTML); // レスポンス用のHTMLを送信
+      socket.end(); // レスポンスを終了
     } else {
-      // 404 または 405 を返す処理
+      // その他のリクエストに対する処理
       const status =
         method === "GET" || method === "POST"
-          ? "405 Method Not Allowed"
-          : "404 Not Found";
+          ? "405 Method Not Allowed" // 許可されていないメソッドの場合
+          : "404 Not Found"; // 存在しないパスの場合
       socket.write(`HTTP/1.1 ${status}\r\n`);
       socket.write("Content-Type: text/plain; charset=UTF-8\r\n");
       socket.write("\r\n");
-      socket.write(status);
-      socket.end();
+      socket.write(status); // エラーメッセージを送信
+      socket.end(); // レスポンスを終了
     }
   });
 });

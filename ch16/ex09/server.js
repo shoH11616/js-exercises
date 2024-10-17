@@ -5,20 +5,20 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const app = express();
 
 /**
  * 特定のエンドポイント "/test/mirror" に対して、受信したリクエストをそのまま送り返す。
  */
 app.use("/test/mirror", (req, res) => {
+  // リクエストの情報をヘッダーとして設定
   res.setHeader("Content-Type", "text/plain;charset=UTF-8");
   res.write(`${req.method} ${req.url} HTTP/${req.httpVersion}\r\n`);
   for (const header in req.headers) {
     res.write(`${header}: ${req.headers[header]}\r\n`);
   }
   res.write("\r\n");
-
+  // リクエストボディをそのままレスポンスに流す
   req.pipe(res);
 });
 
@@ -28,8 +28,9 @@ app.use("/test/mirror", (req, res) => {
 app.use((req, res) => {
   let filename = req.path.substring(1); // 最初の/を取り除く
   filename = filename.replace(/\.\.\//g, ""); // ../を禁止する
-  filename = path.resolve(__dirname, filename);
+  filename = path.resolve(__dirname, filename); // 絶対パスに変換する
 
+  // ファイルの拡張子によってContent-Typeを設定する
   let type;
   switch (path.extname(filename)) {
     case ".html":
@@ -53,6 +54,7 @@ app.use((req, res) => {
       break;
   }
 
+  // ファイルを読み取り、レスポンスとして返す
   fs.createReadStream(filename)
     .on("open", function () {
       res.setHeader("Content-Type", type);

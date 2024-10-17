@@ -4,11 +4,13 @@ if (threads.isMainThread) {
   let num = 0;
   let worker = new threads.Worker(__filename);
 
+  // ワーカーがオンラインになったときの処理
   worker.on("online", () => {
     for (let i = 0; i < 10_000_000; i++) {
       num++; // スレッドセーフでないインクリメント
     }
 
+    // ワーカーからメッセージを受け取ったときの処理
     worker.on("message", (message) => {
       if (message === "increment") {
         num++; // サブスレッドからのインクリメント命令に応答

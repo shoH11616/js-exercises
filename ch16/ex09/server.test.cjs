@@ -24,29 +24,33 @@ let server;
 const testFilePath = path.join(__dirname, "testfile.txt");
 const testDirPath = path.join(__dirname, "testdir");
 
+// テスト前のセットアップ：サーバー起動とテスト用ファイル・ディレクトリの作成
 before((done) => {
-  server = exec("node server.js 3000");
-  fs.writeFileSync(testFilePath, "This is a test file.");
+  server = exec("node server.js 3000"); // サーバーをポート3000で起動
+  fs.writeFileSync(testFilePath, "This is a test file."); // テスト用ファイルを作成
   if (!fs.existsSync(testDirPath)) {
-    fs.mkdirSync(testDirPath);
+    fs.mkdirSync(testDirPath); // テスト用ディレクトリを作成
   }
-  setTimeout(done, 1000); // サーバーが起動するまで待機
+  setTimeout(done, 1000); // サーバーが起動するまで1秒待機
 });
 
+// テスト後のクリーンアップ：サーバー停止とテスト用ファイル・ディレクトリの削除
 after((done) => {
-  server.kill();
-  fs.unlinkSync(testFilePath);
-  fs.rmdirSync(testDirPath, { recursive: true });
+  server.kill(); // サーバーを停止
+  fs.unlinkSync(testFilePath); // テスト用ファイルを削除
+  fs.rmdirSync(testDirPath, { recursive: true }); // テスト用ディレクトリを削除
   done();
 });
 
+// Expressサーバーのテストスイート
 describe("Express Server", () => {
+  // /test/mirrorに対するリクエストをミラーリングするかのテスト
   it("should mirror requests to /test/mirror", (done) => {
     request("http://localhost:3000")
       .post("/test/mirror")
-      .set("Test-Header", "TestValue")
-      .send("Request body content")
-      .expect(200)
+      .set("Test-Header", "TestValue") // カスタムヘッダーをセット
+      .send("Request body content") // リクエストボディを送信
+      .expect(200) // ステータス200を期待
       .expect((res) => {
         if (!res.text.includes("POST /test/mirror HTTP/1.1"))
           throw new Error("Invalid response");
@@ -58,19 +62,21 @@ describe("Express Server", () => {
       .end(done);
   });
 
+  // 静的ファイルを提供するかのテスト
   it("should serve static files", (done) => {
     request("http://localhost:3000")
       .get("/testfile.txt")
-      .expect(200)
-      .expect("Content-Type", /text\/plain/)
-      .expect("This is a test file.")
+      .expect(200) // ステータス200を期待
+      .expect("Content-Type", /text\/plain/) // Content-Typeがtext/plainであることを期待
+      .expect("This is a test file.") // ファイルの内容を期待
       .end(done);
   });
 
+  // 存在しないファイルに対して404を返すかのテスト
   it("should return 404 for non-existent files", (done) => {
     request("http://localhost:3000")
       .get("/nonexistent.txt")
-      .expect(404)
+      .expect(404) // ステータス404を期待
       .end(done);
   });
 });

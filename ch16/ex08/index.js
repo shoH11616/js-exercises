@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import fetch from "node-fetch";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -63,6 +62,7 @@ async function listOpenIssues(repo) {
     },
   });
   const issues = await response.json();
+  // 各Issueの番号とタイトルをコンソールに出力する
   issues.forEach((issue) => {
     console.log(`#${issue.number}: ${issue.title}`);
   });
@@ -75,6 +75,7 @@ async function listOpenIssues(repo) {
  */
 function main() {
   const argv = yargs(hideBin(process.argv))
+    // createコマンド: 新しいIssueを作成する
     .command(
       "create <repo> <title> [body]",
       "Create a new issue",
@@ -98,6 +99,7 @@ function main() {
         createIssue(argv.repo, argv.title, argv.body);
       }
     )
+    // closeコマンド: 指定されたIssueをクローズする
     .command(
       "close <repo> <issue_number>",
       "Close an issue",
@@ -116,6 +118,7 @@ function main() {
         closeIssue(argv.repo, argv.issue_number);
       }
     )
+    // listコマンド: オープンなIssueの一覧を表示する
     .command(
       "list <repo>",
       "List open issues",
@@ -129,16 +132,19 @@ function main() {
         listOpenIssues(argv.repo);
       }
     )
+    // ヘルプオプション
     .option("h", {
       alias: "help",
       description: "Display help message",
       type: "boolean",
     })
+    // 詳細ログオプション
     .option("v", {
       alias: "verbose",
       description: "Enable verbose logging",
       type: "boolean",
     })
+    // 詳細ログを有効にするミドルウェア
     .middleware((argv) => {
       if (argv.verbose) {
         console.log("Verbose logging enabled");
@@ -152,4 +158,5 @@ function main() {
     .help().argv;
 }
 
+// メイン関数を実行してコマンドライン引数を処理する
 main();
