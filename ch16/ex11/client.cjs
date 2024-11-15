@@ -2,7 +2,7 @@ const net = require("net");
 const clients = [];
 
 // 2000個のクライアントソケットを作成して接続する
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 20000; i++) {
   const client = new net.Socket();
   client.connect(8080, "localhost", () => {
     console.log(`Client ${i} connected`); // クライアントが接続されたことを表示
