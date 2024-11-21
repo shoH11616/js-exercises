@@ -1,5 +1,7 @@
 {
   "cSpell.words": ["Consts"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "flow.useNPMPackagedFlow": true,
+  "javascript.validate.enable": false
 }

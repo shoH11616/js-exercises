@@ -1,32 +1,32 @@
 // 型定義
-type User = { id: number; name: string }; // ユーザーを表す型
-type Task = { title: string; completed: boolean; user: User }; // タスクを表す型
-type Priority = "low" | "middle" | "high"; // 優先度の型
-type PriorityTask = Task & { priority: Priority }; // 優先度付きタスクの型
+export type User = { id: number; name: string }; // ユーザーを表す型
+export type Task = { title: string; completed: boolean; user: User }; // タスクを表す型
+export type Priority = 'low' | 'middle' | 'high'; // 優先度を表す型
+export type PriorityTask = Task & { priority: Priority }; // 優先度付きタスクの型
 
 /**
- * Userオブジェクトであることを判定する関数
- * @param {any} obj - 判定対象のオブジェクト
- * @returns {boolean} User型である場合はtrue
+ * オブジェクトがUser型かどうかを判定する関数
+ * @param obj - 判定対象のオブジェクト
+ * @returns objがUser型の場合true
  */
-export function isUserObject(obj: any): obj is User {
+function isUserObject(obj: any): obj is User {
   return (
-    typeof obj === "object" &&
-    typeof obj.id === "number" &&
-    typeof obj.name === "string"
+    typeof obj === 'object' &&
+    typeof obj['id'] === 'number' &&
+    typeof obj['name'] === 'string'
   );
 }
 
 /**
  * タスク管理クラス
- * @template T - タスクの型（Taskまたはその派生型）
+ * @template T - 管理するタスクの型
  */
 export class TaskManager<T extends Task> {
   private _tasks: T[] = []; // 管理するタスクの配列
 
   /**
    * タスクを追加する
-   * @param {T} task - 追加するタスク
+   * @param task - 追加するタスク
    */
   add(task: T): void {
     this._tasks.push(task);
@@ -34,16 +34,16 @@ export class TaskManager<T extends Task> {
 
   /**
    * タスクを完了状態にする
-   * @param {User | string} target - 完了対象のユーザーまたはタスクタイトル
+   * @param target - 完了対象（ユーザーまたはタスクタイトル）
    */
   completeTask(target: User | string): void {
     if (isUserObject(target)) {
-      // ユーザーに紐づくタスクを完了
+      // Userオブジェクトが指定された場合
       this._tasks
         .filter((t) => t.user === target)
         .forEach((t) => (t.completed = true));
     } else {
-      // タイトルに一致するタスクを完了
+      // タイトルが指定された場合
       this._tasks
         .filter((t) => t.title === target)
         .forEach((t) => (t.completed = true));
@@ -51,29 +51,33 @@ export class TaskManager<T extends Task> {
   }
 
   /**
-   * 引数の関数にマッチするタスクを返す
-   * @param {(task: T) => boolean} [predicate] - フィルタリング条件
-   * @returns {T[]} 条件に一致するタスクの配列
+   * 条件にマッチするタスクを取得する
+   * @param predicate - フィルタリング条件（オプション）
+   * @returns 条件に一致するタスクの配列
    */
   getTasks(predicate?: (task: T) => boolean): T[] {
-    return predicate ? this._tasks.filter(predicate) : this._tasks;
+    if (predicate === undefined) {
+      return this._tasks; // 条件がない場合はすべてのタスクを返す
+    } else {
+      return this._tasks.filter(predicate); // 条件に一致するタスクのみ返す
+    }
   }
 }
 
 /**
- * 優先度が"low"または完了済みのタスクであるかを判定する
- * @param {PriorityTask} task - 判定対象のタスク
- * @returns {boolean} 判定結果
+ * タスクが優先度"low"または完了済みかを判定する関数
+ * @param task - 判定対象のタスク
+ * @returns 条件に一致する場合true
  */
 export function isLowOrCompletedTask(task: PriorityTask): boolean {
-  return task.priority === "low" || task.completed;
+  return task.priority === 'low' || task.completed;
 }
 
 /**
  * 判定関数の否定結果を返す関数を生成する
- * @template T
- * @param {(arg: T) => boolean} f - 判定関数
- * @returns {(arg: T) => boolean} 否定結果を返す関数
+ * @template T - 判定対象の型
+ * @param f - 判定関数
+ * @returns fの否定を返す関数
  */
 export function not<T>(f: (arg: T) => boolean): (arg: T) => boolean {
   return (arg: T) => !f(arg);

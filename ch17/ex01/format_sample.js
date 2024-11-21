@@ -1,8 +1,8 @@
 // フォーマットが効いているかの動作確認用のファイル
 
 function sample() {
-  var a = "sample string";
-  const spaces = "illegal spaces";
+  var a = 'sample string';
+  const spaces = 'illegal spaces';
   let disallowedObj = {
     width: 42, // struct-style unquoted key
     maxWidth: 43, // dict-style quoted key
@@ -10,6 +10,7 @@ function sample() {
 
   // React公式のサンプルを参考に設定
   let jsx = (
+    // Parsing error: Unexpected token <eslintがどうしても消えない
     <button
       className="prettier-class"
       id="prettier-id"
@@ -127,7 +128,7 @@ exports.Baz = class extends Bar {
 };
 
 // Function expressions
-prefix.something.reallyLongFunctionName("whatever", (a1, a2) => {
+prefix.something.reallyLongFunctionName('whatever', (a1, a2) => {
   // Indent the function body +2 relative to indentation depth
   // of the 'prefix' statement one line above.
   if (a1.equals(a2)) {

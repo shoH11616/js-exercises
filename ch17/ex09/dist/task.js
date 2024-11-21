@@ -1,9 +1,8 @@
-// 以下の型を定義すること
-//  - User: { id: number, name: string }
-//  - Task: { title: string, completed: boolean, user: User }
-//  - Priority: "low"|"middle"|"high"のいずれかの値をとる
-//  - PriorityTask: Taskかつ{ priority: Priority }を持つ型
-
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.TaskManager = void 0;
+exports.isLowOrCompletedTask = isLowOrCompletedTask;
+exports.not = not;
 // Userオブジェクトであることを判定する
 function isUserObject(obj) {
   return (
@@ -12,18 +11,15 @@ function isUserObject(obj) {
     typeof obj['name'] === 'string'
   );
 }
-
-export class TaskManager {
-  _tasks = [];
-
+class TaskManager {
+  constructor() {
+    this._tasks = [];
+  }
   // タスクを追加する
   add(task) {
     this._tasks.push(task);
   }
-
   // タスクを完了にする
-  // Userオブジェクトを指定した場合はそのUserのタスクを全て完了にする
-  // 文字列を指定した場合は、そのタイトルのタスクを全て完了にする
   completeTask(target) {
     if (isUserObject(target)) {
       this._tasks
@@ -35,9 +31,7 @@ export class TaskManager {
         .forEach((t) => (t.completed = true));
     }
   }
-
   // 引数の関数にマッチするタスクを返す
-  // 引数を省略した場合はすべてのタスクを返す
   getTasks(predicate) {
     if (predicate === undefined) {
       return this._tasks;
@@ -46,13 +40,12 @@ export class TaskManager {
     }
   }
 }
-
+exports.TaskManager = TaskManager;
 // priority="low"または完了済のタスクを判定する
-export function isLowOrCompletedTask(priorityTask) {
-  return priorityTask.priority === 'low' || priorityTask.completed;
+function isLowOrCompletedTask(task) {
+  return task.priority === 'low' || task.completed;
 }
-
 // 判定関数の否定結果を返す関数を生成する
-export function not(f) {
+function not(f) {
   return (arg) => !f(arg);
 }
