@@ -1,0 +1,80 @@
+/* 基本スタイル */
+body {
+  font-family: "Roboto", sans-serif; /* フォントをモダンで読みやすいものに変更 */
+  text-align: center;
+  background-color: #f3f7f9; /* 青みがかった柔らかいグレー */
+  margin: 0;
+  padding: 40px;
+  color: #4a4a4a; /* ダークグレーで目に優しい文字色 */
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  color: #2a2a2a; /* 文字を濃いグレーに */
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* パズルコンテナ */
+#puzzle-container {
+  display: grid;
+  grid-template-columns: repeat(3, 100px); /* 3列 */
+  grid-template-rows: repeat(3, 100px); /* 3行 */
+  gap: 5px; /* ピース間に柔らかい間隔を追加 */
+  width: 320px;
+  margin: 20px auto; /* 全体を中央寄せ */
+  border: 3px solid #d1d5db; /* 優しいグレーの枠線 */
+  border-radius: 10px; /* 枠に丸みを追加 */
+  background-color: #ffffff; /* 背景を白くしてピースを目立たせる */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 全体に軽い影を追加 */
+}
+
+/* パズルピース */
+.puzzle-piece {
+  width: 100px;
+  height: 100px;
+  background-image: url("../assets/clock-face.svg");
+  background-size: 300px 300px;
+  border: 1px solid #e5e7eb; /* ピースの枠を柔らかいグレーに */
+  cursor: grab;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease; /* 滑らかな動き */
+}
+
+.puzzle-piece:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* ホバー時に影を強調 */
+  transform: scale(1.05); /* ピースを少し拡大 */
+}
+
+.puzzle-piece.dragging {
+  opacity: 0.7; /* ドラッグ中に透明度を少し下げる */
+  cursor: grabbing;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* ドラッグ中に影を強調 */
+}
+
+.puzzle-piece.over {
+  border: 2px solid #a3d8f4; /* 柔らかい水色の枠線 */
+  background-color: rgba(163, 216, 244, 0.3); /* 水色の透明背景 */
+  box-shadow: 0 0 15px rgba(163, 216, 244, 0.7); /* 強調する影 */
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 400px) {
+  #puzzle-container {
+    width: 90%; /* 横幅を画面に合わせて調整 */
+    grid-template-columns: repeat(3, 1fr); /* フレキシブルな幅 */
+    grid-template-rows: repeat(3, auto);
+  }
+
+  .puzzle-piece {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1; /* 正方形を維持 */
+  }
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <circle cx="150" cy="150" r="140" fill="white" stroke="black" stroke-width="4"/>
+  <line x1="150" y1="150" x2="150" y2="50" stroke="black" stroke-width="4" id="hour-hand"/>
+  <line x1="150" y1="150" x2="150" y2="30" stroke="black" stroke-width="2" id="minute-hand"/>
+  <line x1="150" y1="150" x2="150" y2="20" stroke="red" stroke-width="1" id="second-hand"/>
+  <!-- ダイヤル（目盛り） -->
+<g id="dial">
+  <text x="150" y="40" text-anchor="middle" font-size="20" font-family="Arial">12</text>
+  <text x="225" y="70" text-anchor="middle" font-size="16" font-family="Arial">1</text>
+  <text x="260" y="150" text-anchor="middle" font-size="16" font-family="Arial">2</text>
+  <text x="225" y="230" text-anchor="middle" font-size="16" font-family="Arial">3</text>
+  <text x="150" y="260" text-anchor="middle" font-size="16" font-family="Arial">4</text>
+  <text x="75" y="230" text-anchor="middle" font-size="16" font-family="Arial">5</text>
+  <text x="40" y="150" text-anchor="middle" font-size="16" font-family="Arial">6</text>
+  <text x="75" y="70" text-anchor="middle" font-size="16" font-family="Arial">7</text>
+  <text x="150" y="40" text-anchor="middle" font-size="16" font-family="Arial">8</text>
+  <text x="225" y="70" text-anchor="middle" font-size="16" font-family="Arial">9</text>
+  <text x="260" y="150" text-anchor="middle" font-size="16" font-family="Arial">10</text>
+  <text x="225" y="230" text-anchor="middle" font-size="16" font-family="Arial">11</text>
+</g>
+</svg>
