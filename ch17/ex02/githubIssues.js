@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 /**
  * GitHubのリポジトリにIssueを作成する関数
@@ -11,10 +11,10 @@ import fetch from 'node-fetch';
 export async function createIssue(repo, title, body) {
   const url = `https://api.github.com/repos/${repo}/issues`; // Issue作成のエンドポイント
   const response = await fetch(url, {
-    method: 'POST', // POSTメソッドでリクエスト
+    method: "POST", // POSTメソッドでリクエスト
     headers: {
       Authorization: `token ${process.env.GITHUB_TOKEN}`, // トークンを使用して認証
-      'Content-Type': 'application/json', // リクエストボディはJSON形式
+      "Content-Type": "application/json", // リクエストボディはJSON形式
     },
     body: JSON.stringify({ title, body }), // タイトルと本文をリクエストボディに含める
   });
@@ -31,12 +31,12 @@ export async function createIssue(repo, title, body) {
 export async function closeIssue(repo, issue_number) {
   const url = `https://api.github.com/repos/${repo}/issues/${issue_number}`; // Issueクローズのエンドポイント
   const response = await fetch(url, {
-    method: 'PATCH', // PATCHメソッドでリクエスト
+    method: "PATCH", // PATCHメソッドでリクエスト
     headers: {
       Authorization: `token ${process.env.GITHUB_TOKEN}`, // トークンを使用して認証
-      'Content-Type': 'application/json', // リクエストボディはJSON形式
+      "Content-Type": "application/json", // リクエストボディはJSON形式
     },
-    body: JSON.stringify({ state: 'closed' }), // Issueをクローズするための状態設定
+    body: JSON.stringify({ state: "closed" }), // Issueをクローズするための状態設定
   });
   return response.json(); // クローズされたIssueのJSONデータを返す
 }
@@ -52,7 +52,7 @@ export async function listOpenIssues(repo) {
   const response = await fetch(url, {
     headers: {
       Authorization: `token ${process.env.GITHUB_TOKEN}`, // トークンを使用して認証
-      'Content-Type': 'application/json', // リクエストヘッダーをJSON形式に設定
+      "Content-Type": "application/json", // リクエストヘッダーをJSON形式に設定
     },
   });
   return response.json(); // オープンなIssueのリストをJSONデータで返す
