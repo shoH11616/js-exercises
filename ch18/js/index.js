@@ -188,9 +188,7 @@ function checkCompletion() {
     const diffSec = Math.floor(diffMs / 1000);
     const formattedTime = formatTimeHHMMSS(diffSec);
 
-    alert(
-      `パズルが完成し時計が再び動き出す。クリアタイム: ${formattedTime}！ `
-    );
+    alert(`パズルが完成し時計が再び動き出す。クリアタイム: ${formattedTime} `);
 
     // クリアアニメーション
     puzzleContainer.classList.add("complete-animation");
