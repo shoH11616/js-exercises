@@ -854,3 +854,418 @@ p {
 </g>
 </svg>
 ```
+
+### 2024/12/17 18:00
+
+以下のディレクトリとファイル構成で、パズルと時計を組み合わせたパズル時計を作成しています。先ほどいくつかの修正も指示いただいたと思います。
+パズルのピースとなった時計のSVGに関してですが、画像のように、全てのピース全体を囲う灰色の枠線と、それぞれのピースの位置が微妙にずれてしまっている気がします。
+灰色の枠線を持つ四角の右側が余っている状況のように思われます。
+ピース全体に対して、余白無く灰色の枠線を持つ四角が配置されるようにしてほしいのですが、修正できますでしょうか。
+修正に必要なファイルと、その全内容を提示してください。
+
+project-directory/
+├── index.html # メインHTMLファイル
+├── css/
+│ └── styles.css # CSSファイル
+├── js/
+│ └── index.js # JavaScriptファイル
+├── assets/
+│ └── clock-face.svg # 時計デザイン用のSVGファイル
+└── README.md # プロジェクトの説明
+
+```html
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVG パズル時計</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <h1>SVG パズル時計</h1>
+    <p>パズルを完成させて時計を見てみましょう！</p>
+
+    <!-- パズルピース格納コンテナ -->
+    <div id="puzzle-container"></div>
+
+    <!-- プレイ時間の表示 -->
+    <p id="timer-display">プレイ時間: 00:00:00</p>
+
+    <script src="js/index.js"></script>
+  </body>
+</html>
+```
+
+```js
+const puzzleContainer = document.getElementById("puzzle-container");
+const timerDisplay = document.getElementById("timer-display");
+
+let draggedPiece = null;
+let targetPiece = null;
+
+// ピースサイズとSVGの背景サイズ
+const pieceSize = 100;
+const svgSize = 300;
+
+// グローバル変数
+let startTime = null;
+let timerInterval = null;
+
+// 時計SVGのテンプレート（動的に針を動かすために関数化）
+function generateClockSVG(hours, minutes, seconds) {
+  // circle の半径は 140 のまま
+  const circleRadius = 140;
+  // ダイヤル文字は円より内側に置くため、配置半径を少し小さめにする
+  const dialRadius = 120;
+
+  return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgSize} ${svgSize}" width="${svgSize}" height="${svgSize}">
+  <circle cx="150" cy="150" r="${circleRadius}" fill="white" stroke="black" stroke-width="4"/>
+
+  <line x1="150" y1="150" x2="150" y2="50" stroke="black" stroke-width="4"
+        transform="rotate(${
+          ((hours % 12) / 12) * 360 + (minutes / 60) * 30
+        }, 150, 150)"/>
+  <line x1="150" y1="150" x2="150" y2="30" stroke="black" stroke-width="2"
+        transform="rotate(${
+          (minutes / 60) * 360 + (seconds / 60) * 6
+        }, 150, 150)"/>
+  <line x1="150" y1="150" x2="150" y2="20" stroke="red" stroke-width="1"
+        transform="rotate(${(seconds / 60) * 360}, 150, 150)"/>
+
+  <g id="dial">
+    ${Array.from({ length: 12 })
+      .map((_, i) => {
+        const angle = (i * 30 - 90) * (Math.PI / 180);
+        const x = 150 + dialRadius * Math.cos(angle);
+        const y = 150 + dialRadius * Math.sin(angle);
+        const number = i === 0 ? 12 : i;
+
+        return `
+          <text 
+            x="${x}" 
+            y="${y}" 
+            text-anchor="middle" 
+            dominant-baseline="middle"
+            font-size="16" 
+            font-family="Arial"
+          >
+            ${number}
+          </text>
+        `;
+      })
+      .join("")}
+  </g>
+</svg>
+  `;
+}
+
+// 現在時刻を取得
+const now = new Date();
+const seconds = now.getSeconds();
+const minutes = now.getMinutes();
+const hours = now.getHours();
+
+// 時計SVGの背景画像を生成
+const initialClockSVG = generateClockSVG(hours, minutes, seconds);
+const svgBlob = new Blob([initialClockSVG], { type: "image/svg+xml" });
+const svgURL = URL.createObjectURL(svgBlob);
+
+// ピースの初期化（3×3）
+const positions = Array.from({ length: 9 }, (_, i) => i);
+const shuffledPositions = positions.sort(() => Math.random() - 0.5);
+
+// ピースを生成
+shuffledPositions.forEach((position) => {
+  const piece = document.createElement("div");
+  piece.classList.add("puzzle-piece");
+  piece.setAttribute("data-correct-position", position);
+
+  const x = (position % 3) * pieceSize;
+  const y = Math.floor(position / 3) * pieceSize;
+  piece.style.width = `${pieceSize}px`;
+  piece.style.height = `${pieceSize}px`;
+  piece.style.backgroundImage = `url(${svgURL})`;
+  piece.style.backgroundSize = `${svgSize}px ${svgSize}px`;
+  piece.style.backgroundPosition = `-${x}px -${y}px`;
+  piece.style.border = "1px solid black";
+  piece.setAttribute("draggable", true);
+  puzzleContainer.appendChild(piece);
+});
+
+// 時間を HH:MM:SS 形式に整形
+function formatTimeHHMMSS(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const remainder = totalSeconds % 3600;
+  const mins = Math.floor(remainder / 60);
+  const secs = remainder % 60;
+
+  const hh = hours.toString().padStart(2, "0");
+  const mm = mins.toString().padStart(2, "0");
+  const ss = secs.toString().padStart(2, "0");
+  return `${hh}:${mm}:${ss}`;
+}
+
+// パズル生成後に計測開始
+startTime = new Date();
+timerInterval = setInterval(() => {
+  const now = new Date();
+  const elapsedMs = now - startTime;
+  const elapsedSec = Math.floor(elapsedMs / 1000);
+  timerDisplay.textContent = `プレイ時間: ${formatTimeHHMMSS(elapsedSec)}`;
+}, 1000);
+
+// ドラッグ開始
+puzzleContainer.addEventListener("dragstart", (e) => {
+  draggedPiece = e.target;
+  draggedPiece.classList.add("dragging");
+});
+
+// ドラッグ終了
+puzzleContainer.addEventListener("dragend", (e) => {
+  if (draggedPiece) {
+    draggedPiece.classList.remove("dragging");
+    draggedPiece = null;
+  }
+  if (targetPiece) {
+    targetPiece.classList.remove("over");
+    targetPiece = null;
+  }
+});
+
+// ドラッグ中
+puzzleContainer.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const target = e.target;
+  if (
+    target &&
+    target !== draggedPiece &&
+    target.classList.contains("puzzle-piece")
+  ) {
+    if (targetPiece) targetPiece.classList.remove("over");
+    targetPiece = target;
+    targetPiece.classList.add("over");
+  }
+});
+
+// ドロップ
+puzzleContainer.addEventListener("drop", (e) => {
+  if (draggedPiece && targetPiece) {
+    // 背景位置を交換
+    const tempPosition = draggedPiece.style.backgroundPosition;
+    draggedPiece.style.backgroundPosition =
+      targetPiece.style.backgroundPosition;
+    targetPiece.style.backgroundPosition = tempPosition;
+
+    // data-correct-position も交換
+    const tempCorrectPosition = draggedPiece.getAttribute(
+      "data-correct-position"
+    );
+    draggedPiece.setAttribute(
+      "data-correct-position",
+      targetPiece.getAttribute("data-correct-position")
+    );
+    targetPiece.setAttribute("data-correct-position", tempCorrectPosition);
+
+    targetPiece.classList.remove("over");
+    targetPiece = null;
+
+    checkCompletion();
+  }
+});
+
+// 時計の針をリアルタイムで更新
+function updateClock() {
+  const now = new Date();
+  const seconds = now.getSeconds();
+  const minutes = now.getMinutes();
+  const hours = now.getHours();
+  puzzleContainer.innerHTML = generateClockSVG(hours, minutes, seconds);
+}
+
+// 完成判定
+function checkCompletion() {
+  const pieces = document.querySelectorAll(".puzzle-piece");
+  const isCompleted = Array.from(pieces).every((piece, index) => {
+    return parseInt(piece.getAttribute("data-correct-position")) === index;
+  });
+
+  if (isCompleted) {
+    // タイマー停止
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    const endTime = new Date();
+    const diffMs = endTime - startTime;
+    const diffSec = Math.floor(diffMs / 1000);
+    const formattedTime = formatTimeHHMMSS(diffSec);
+
+    alert(`パズル完成！クリアタイム: ${formattedTime} でした。`);
+
+    // ---- クリア時アニメーション用クラスを付与 ----
+    puzzleContainer.classList.add("complete-animation");
+
+    // 少し遅れて時計表示（アニメ演出を見やすくするため）
+    setTimeout(() => {
+      // ここで ".completed-clock" クラスを追加して中央寄せに切り替える
+      puzzleContainer.classList.add("completed-clock");
+      // アニメーション用クラスを除去したいなら remove() してもOK
+      puzzleContainer.classList.remove("complete-animation");
+
+      puzzleContainer.innerHTML = generateClockSVG(hours, minutes, seconds);
+      setInterval(updateClock, 1000);
+
+      timerDisplay.textContent = `プレイ時間: ${formattedTime} (完成)`;
+    }, 2000);
+  }
+}
+```
+
+```css
+/* 基本スタイル */
+body {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  background-color: #f3f7f9;
+  margin: 0;
+  padding: 40px;
+  color: #4a4a4a;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  color: #2a2a2a;
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* パズルコンテナ (初期状態: 3x3 grid) */
+#puzzle-container {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 5px;
+  width: 320px;
+  margin: 20px auto;
+  border: 3px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* パズル完成後、上下左右中央揃えに切り替えるクラス */
+#puzzle-container.completed-clock {
+  display: flex; /* GridからFlexに切り替え */
+  justify-content: center; /* 水平中央 */
+  align-items: center; /* 垂直中央 */
+  width: 320px;
+  height: 320px; /* Grid時はautoだったが、時計を中央に収めるなら固定でもOK */
+  margin: 20px auto;
+  border: 3px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* パズルピース */
+.puzzle-piece {
+  width: 100px;
+  height: 100px;
+  background-image: url("../assets/clock-face.svg");
+  background-size: 300px 300px;
+  border: 1px solid #e5e7eb;
+  cursor: grab;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.puzzle-piece:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.puzzle-piece.dragging {
+  opacity: 0.7;
+  cursor: grabbing;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.puzzle-piece.over {
+  border: 2px solid #a3d8f4;
+  background-color: rgba(163, 216, 244, 0.3);
+  box-shadow: 0 0 15px rgba(163, 216, 244, 0.7);
+}
+
+/* クリア時アニメーション用クラス */
+.complete-animation {
+  animation: puzzleCompleteGlow 2s ease-in-out forwards;
+}
+
+/* アニメーション定義 */
+@keyframes puzzleCompleteGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 193, 7, 0);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 193, 7, 0.7);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 193, 7, 0);
+    transform: scale(1);
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 400px) {
+  #puzzle-container {
+    width: 90%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, auto);
+    height: auto; /* スマホでの縦伸び防止 */
+  }
+  #puzzle-container.completed-clock {
+    width: 90%;
+    height: auto;
+  }
+  .puzzle-piece {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+}
+```
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <circle cx="150" cy="150" r="140" fill="white" stroke="black" stroke-width="4"/>
+  <line x1="150" y1="150" x2="150" y2="50" stroke="black" stroke-width="4" id="hour-hand"/>
+  <line x1="150" y1="150" x2="150" y2="30" stroke="black" stroke-width="2" id="minute-hand"/>
+  <line x1="150" y1="150" x2="150" y2="20" stroke="red" stroke-width="1" id="second-hand"/>
+  <!-- ダイヤル（目盛り） -->
+<g id="dial">
+  <text x="150" y="40" text-anchor="middle" font-size="20" font-family="Arial">12</text>
+  <text x="225" y="70" text-anchor="middle" font-size="16" font-family="Arial">1</text>
+  <text x="260" y="150" text-anchor="middle" font-size="16" font-family="Arial">2</text>
+  <text x="225" y="230" text-anchor="middle" font-size="16" font-family="Arial">3</text>
+  <text x="150" y="260" text-anchor="middle" font-size="16" font-family="Arial">4</text>
+  <text x="75" y="230" text-anchor="middle" font-size="16" font-family="Arial">5</text>
+  <text x="40" y="150" text-anchor="middle" font-size="16" font-family="Arial">6</text>
+  <text x="75" y="70" text-anchor="middle" font-size="16" font-family="Arial">7</text>
+  <text x="150" y="40" text-anchor="middle" font-size="16" font-family="Arial">8</text>
+  <text x="225" y="70" text-anchor="middle" font-size="16" font-family="Arial">9</text>
+  <text x="260" y="150" text-anchor="middle" font-size="16" font-family="Arial">10</text>
+  <text x="225" y="230" text-anchor="middle" font-size="16" font-family="Arial">11</text>
+</g>
+</svg>
+```

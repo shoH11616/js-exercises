@@ -1,17 +1,17 @@
 /* 基本スタイル */
 body {
-  font-family: "Roboto", sans-serif; /* フォントをモダンで読みやすいものに変更 */
+  font-family: "Roboto", sans-serif;
   text-align: center;
-  background-color: #f3f7f9; /* 青みがかった柔らかいグレー */
+  background-color: #f3f7f9;
   margin: 0;
   padding: 40px;
-  color: #4a4a4a; /* ダークグレーで目に優しい文字色 */
+  color: #4a4a4a;
 }
 
 h1 {
   font-size: 2.5em;
   margin-bottom: 15px;
-  color: #2a2a2a; /* 文字を濃いグレーに */
+  color: #2a2a2a;
 }
 
 p {
@@ -20,18 +20,35 @@ p {
   line-height: 1.6;
 }
 
-/* パズルコンテナ */
+/* パズルコンテナ (初期状態: 3x3 grid)
+   gapを0にして、幅300pxぴったりにする */
 #puzzle-container {
   display: grid;
-  grid-template-columns: repeat(3, 100px); /* 3列 */
-  grid-template-rows: repeat(3, 100px); /* 3行 */
-  gap: 5px; /* ピース間に柔らかい間隔を追加 */
-  width: 320px;
-  margin: 20px auto; /* 全体を中央寄せ */
-  border: 3px solid #d1d5db; /* 優しいグレーの枠線 */
-  border-radius: 10px; /* 枠に丸みを追加 */
-  background-color: #ffffff; /* 背景を白くしてピースを目立たせる */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 全体に軽い影を追加 */
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  /* gap: 5px; を削除 */
+  gap: 0;
+  width: 300px;
+  margin: 20px auto;
+  border: 3px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* パズル完成後、上下左右中央揃えに切り替えるクラス */
+#puzzle-container.completed-clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 同じく幅300px & 高さ300pxに合わせる */
+  width: 300px;
+  height: 300px;
+  margin: 20px auto;
+  border: 3px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* パズルピース */
@@ -40,41 +57,66 @@ p {
   height: 100px;
   background-image: url("../assets/clock-face.svg");
   background-size: 300px 300px;
-  border: 1px solid #e5e7eb; /* ピースの枠を柔らかいグレーに */
+  border: 1px solid #e5e7eb;
   cursor: grab;
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease; /* 滑らかな動き */
+    box-shadow 0.2s ease;
 }
 
 .puzzle-piece:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* ホバー時に影を強調 */
-  transform: scale(1.05); /* ピースを少し拡大 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
 }
 
 .puzzle-piece.dragging {
-  opacity: 0.7; /* ドラッグ中に透明度を少し下げる */
+  opacity: 0.7;
   cursor: grabbing;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* ドラッグ中に影を強調 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .puzzle-piece.over {
-  border: 2px solid #a3d8f4; /* 柔らかい水色の枠線 */
-  background-color: rgba(163, 216, 244, 0.3); /* 水色の透明背景 */
-  box-shadow: 0 0 15px rgba(163, 216, 244, 0.7); /* 強調する影 */
+  border: 2px solid #a3d8f4;
+  background-color: rgba(163, 216, 244, 0.3);
+  box-shadow: 0 0 15px rgba(163, 216, 244, 0.7);
+}
+
+/* クリア時アニメーション用クラス */
+.complete-animation {
+  animation: puzzleCompleteGlow 2s ease-in-out forwards;
+}
+
+/* アニメーション定義 */
+@keyframes puzzleCompleteGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 193, 7, 0);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 193, 7, 0.7);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 193, 7, 0);
+    transform: scale(1);
+  }
 }
 
 /* レスポンシブ対応 */
 @media (max-width: 400px) {
   #puzzle-container {
-    width: 90%; /* 横幅を画面に合わせて調整 */
-    grid-template-columns: repeat(3, 1fr); /* フレキシブルな幅 */
+    width: 90%;
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, auto);
+    height: auto;
   }
-
+  #puzzle-container.completed-clock {
+    width: 90%;
+    height: auto;
+  }
   .puzzle-piece {
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1; /* 正方形を維持 */
+    aspect-ratio: 1 / 1;
   }
 }
