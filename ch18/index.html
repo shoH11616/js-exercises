@@ -10,11 +10,23 @@
     <h1>パズル時計</h1>
     <p>パズルを完成させ、本来の時計の姿を取り戻せ</p>
 
+    <!-- 難易度選択 -->
+    <div id="difficulty-select">
+      難易度:
+      <select id="difficulty">
+        <option value="3">3x3（簡単）</option>
+        <option value="4">4x4（難しい）</option>
+      </select>
+    </div>
+
     <!-- パズルピース格納コンテナ -->
     <div id="puzzle-container"></div>
 
     <!-- プレイ時間の表示 -->
     <p id="timer-display">プレイ時間: 00:00:00</p>
+
+    <!-- リセットボタン -->
+    <button id="reset-button">リセット</button>
 
     <script src="js/index.js"></script>
   </body>
