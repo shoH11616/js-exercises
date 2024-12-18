@@ -29,6 +29,26 @@ p {
   font-size: 1em;
 }
 
+/* タイマーとスコア表示のスタイルを改善 */
+#timer-display,
+#score-display {
+  font-size: 1.2em;
+  color: #2a2a2a;
+  background-color: #f7fafd; /* ごく淡い青系背景で柔らかな印象 */
+  border: 1px solid #d1d5db; /* 全体的な枠線色と統一 */
+  border-radius: 5px;
+  padding: 8px 16px;
+  display: inline-block; /* インラインブロックでコンパクトに表示 */
+  margin-bottom: 20px; /* 下に程よい余白 */
+}
+
+/* スコア表示はクリア後にJSでdisplay:blockにする想定だが、
+   CSSはこのままでOK。表示された時に同じスタイルを適用する。 */
+#score-display {
+  font-weight: bold; /* スコアは強調 */
+}
+
+/* リセットボタン */
 #reset-button {
   background-color: #4a90e2;
   color: #fff;
@@ -54,8 +74,6 @@ p {
 
 /* パズル中 */
 .puzzle-in-progress {
-  /* ここでは display:grid; をクラスで指定する程度に留める。
-     サイズはJSでインライン適用し、難易度ごとに変える。 */
   display: grid;
 }
 

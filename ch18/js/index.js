@@ -2,6 +2,7 @@ const puzzleContainer = document.getElementById("puzzle-container");
 const timerDisplay = document.getElementById("timer-display");
 const resetButton = document.getElementById("reset-button");
 const difficultySelect = document.getElementById("difficulty");
+const scoreDisplay = document.getElementById("score-display");
 
 let draggedPiece = null;
 let targetPiece = null;
@@ -13,6 +14,7 @@ let startTime = null;
 let timerInterval = null;
 let updateClockInterval = null;
 let isCompleted = false;
+let moveCount = 0; // 手数カウント
 
 function generateClockSVG(hours, minutes, seconds) {
   const circleRadius = 140;
@@ -56,19 +58,18 @@ function getCurrentTime() {
 
 function initPuzzle() {
   isCompleted = false;
+  moveCount = 0;
+  scoreDisplay.style.display = "none"; // スコア表示を隠す
 
-  // パズル中用のクラス追加
   puzzleContainer.classList.remove("completed-clock", "complete-animation");
   puzzleContainer.classList.add("puzzle-in-progress");
   puzzleContainer.innerHTML = "";
 
-  // 時計更新タイマー停止
   if (updateClockInterval) {
     clearInterval(updateClockInterval);
     updateClockInterval = null;
   }
 
-  // タイマーリセット
   if (timerInterval) {
     clearInterval(timerInterval);
   }
@@ -108,7 +109,6 @@ function initPuzzle() {
     puzzleContainer.appendChild(piece);
   });
 
-  // インラインスタイルでパズル中のサイズ・レイアウト設定
   const containerSize = pieceSize * gridSize;
   puzzleContainer.style.width = containerSize + "px";
   puzzleContainer.style.height = containerSize + "px";
@@ -164,6 +164,8 @@ puzzleContainer.addEventListener("dragover", (e) => {
 puzzleContainer.addEventListener("drop", (e) => {
   if (isCompleted) return;
   if (draggedPiece && targetPiece) {
+    moveCount++;
+
     const tempPosition = draggedPiece.style.backgroundPosition;
     draggedPiece.style.backgroundPosition =
       targetPiece.style.backgroundPosition;
@@ -204,18 +206,15 @@ function checkCompletion() {
     }
 
     const endTime = new Date();
-    const diffSec = Math.floor((endTime - startTime) / 1000);
+    const diffMs = endTime - startTime;
+    const diffSec = Math.floor(diffMs / 1000);
     const formattedTime = formatTimeHHMMSS(diffSec);
 
-    alert(
-      `パズルが完成し、時計が再び動き出す...! クリアタイム: ${formattedTime}`
-    );
+    alert(`パズル完成！クリアタイム: ${formattedTime}`);
 
     puzzleContainer.classList.add("complete-animation");
 
     setTimeout(() => {
-      // パズル完成後の処理
-      // インラインスタイルをリセット
       puzzleContainer.style.width = "";
       puzzleContainer.style.height = "";
       puzzleContainer.style.display = "";
@@ -231,6 +230,21 @@ function checkCompletion() {
       updateClockInterval = setInterval(updateClock, 1000);
 
       timerDisplay.textContent = `プレイ時間: ${formattedTime} (完成)`;
+
+      // 難易度倍率
+      let difficultyMultiplier = gridSize === 4 ? 100 : 1;
+
+      // 新スコア式: 時間・手数ともに少ないほどスコアUP
+      // 例: score = difficultyMultiplier * floor((10000/(diffMs+1)) * (10000/(moveCount+1)))
+      // diffMsが大きいほど (10000/(diffMs+1)) は小さくなる → スコア減
+      // moveCountが大きいほど (10000/(moveCount+1)) は小さくなる → スコア減
+      const score =
+        difficultyMultiplier *
+        Math.floor((10000 / (diffMs + 1)) * (10000 / (moveCount + 1)));
+
+      // スコア表示
+      scoreDisplay.textContent = `スコア: ${score} (難易度倍率:${difficultyMultiplier}, 手数:${moveCount}, 経過ms:${diffMs})`;
+      scoreDisplay.style.display = "block";
     }, 2000);
   }
 }
