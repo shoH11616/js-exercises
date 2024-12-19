@@ -1,54 +1,67 @@
+/* 全体のフォントや背景色、文字色、レイアウトの基本スタイルを定義する */
 body {
   font-family: "Roboto", sans-serif;
   text-align: center;
-  background-color: #f3f7f9;
+  background-color: #f3f7f9; /* 薄い青みがかったグレーで目に優しい背景 */
   margin: 0;
   padding: 40px;
-  color: #4a4a4a;
+  color: #4a4a4a; /* ダークグレーの文字色 */
 }
 
+/* タイトルのスタイル。サイズを大きく、色をやや濃いめにして見やすくする */
 h1 {
   font-size: 2.5em;
   margin-bottom: 15px;
-  color: #2a2a2a;
+  color: #2a2a2a; /* 文字を濃いグレーで強調 */
 }
 
+/* 段落全般のスタイル。やや大きな文字で行間も余裕を持たせる */
 p {
   font-size: 1.2em;
   margin-bottom: 30px;
   line-height: 1.6;
 }
 
+/* 難易度選択用のセクション。下部に間隔をあけて整える */
 #difficulty-select {
   margin-bottom: 20px;
   font-size: 1em;
 }
 
+/* 難易度選択用のドロップダウン。やや余白を加えて見やすく */
 #difficulty {
   padding: 5px;
   font-size: 1em;
 }
 
-/* タイマーとスコア表示のスタイルを改善 */
+/* タイマー、スコア、ベストスコア表示用共通スタイル。
+   背景を淡い青系で包み、枠線・角丸で柔らかい印象に */
 #timer-display,
-#score-display {
+#score-display,
+#best-score-display {
   font-size: 1.2em;
   color: #2a2a2a;
-  background-color: #f7fafd; /* ごく淡い青系背景で柔らかな印象 */
-  border: 1px solid #d1d5db; /* 全体的な枠線色と統一 */
+  background-color: #f7fafd; /* ごく淡い青系背景で清潔感 */
+  border: 1px solid #d1d5db; /* 全体と調和したグレー系の枠線 */
   border-radius: 5px;
   padding: 8px 16px;
-  display: inline-block; /* インラインブロックでコンパクトに表示 */
-  margin-bottom: 20px; /* 下に程よい余白 */
+  display: inline-block;
+  margin-bottom: 20px;
 }
 
-/* スコア表示はクリア後にJSでdisplay:blockにする想定だが、
-   CSSはこのままでOK。表示された時に同じスタイルを適用する。 */
+/* スコア表示は文字を強調 */
 #score-display {
-  font-weight: bold; /* スコアは強調 */
+  font-weight: bold;
 }
 
-/* リセットボタン */
+/* ベストスコア表示は背景色を変えて特別感を出す */
+#best-score-display {
+  font-weight: bold;
+  background-color: #eafff0; /* 淡い緑がかった色で特別な感じ */
+  border-color: #aedcb0; /* 枠線も少し緑寄りに */
+}
+
+/* リセットボタンのスタイル。青系背景に白文字、ホバーで濃い青 */
 #reset-button {
   background-color: #4a90e2;
   color: #fff;
@@ -59,11 +72,11 @@ p {
   cursor: pointer;
   margin-bottom: 20px;
 }
-
 #reset-button:hover {
-  background-color: #357abd;
+  background-color: #357abd; /* 濃いめの青でホバー時にアクション感 */
 }
 
+/* パズル表示領域。白い背景に薄い枠線、シャドウで浮いた感じを出す */
 #puzzle-container {
   margin: 20px auto;
   border: 3px solid #d1d5db;
@@ -72,12 +85,12 @@ p {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* パズル中 */
+/* パズルプレイ中はグリッド表示でピースを並べる */
 .puzzle-in-progress {
   display: grid;
 }
 
-/* 完成後 */
+/* パズル完成後は時計表示用のレイアウトに変更 */
 .completed-clock {
   display: flex;
   justify-content: center;
@@ -86,35 +99,41 @@ p {
   height: 300px;
 }
 
+/* ピースの基本スタイル。枠線やホバー時の影などでインタラクティブな印象に */
 .puzzle-piece {
   border: 1px solid #e5e7eb;
-  cursor: grab;
+  cursor: grab; /* ドラッグ可能な印象 */
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease; /* ホバーやドラッグ時に滑らかに変化 */
 }
 
 .puzzle-piece:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* ホバーで陰影を強調 */
+  transform: scale(1.05); /* 少し拡大して注目度アップ */
 }
 
+/* ドラッグ中のピースは半透明で影をやや強調 */
 .puzzle-piece.dragging {
   opacity: 0.7;
   cursor: grabbing;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* ドロップ先ピースに重なったときは枠線や背景でハイライト */
 .puzzle-piece.over {
   border: 2px solid #a3d8f4;
   background-color: rgba(163, 216, 244, 0.3);
   box-shadow: 0 0 15px rgba(163, 216, 244, 0.7);
 }
 
+/* 完成アニメーション。完成時に少し光るようなエフェクト */
 .complete-animation {
   animation: puzzleCompleteGlow 2s ease-in-out forwards;
 }
 
+/* 完成時アニメキー:
+   はじめ0%で影なし、50%で強めに光って、100%でまた元に戻る */
 @keyframes puzzleCompleteGlow {
   0% {
     box-shadow: 0 0 0 rgba(255, 193, 7, 0);
@@ -130,6 +149,8 @@ p {
   }
 }
 
+/* スマホなど狭い画面向け調整:
+   パズル領域を幅90%にして高さは自動、完成時の時計表示も同様 */
 @media (max-width: 400px) {
   #puzzle-container {
     width: 90% !important;
@@ -144,6 +165,6 @@ p {
   .puzzle-piece {
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1/1; /* 正方形を維持しつつレスポンシブ対応 */
   }
 }

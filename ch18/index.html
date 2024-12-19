@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>パズル時計</title>
+    <title>ふしぎなとけい</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <h1>パズル時計</h1>
+    <h1>ふしぎなとけい</h1>
     <p>パズルを完成させ、本来の時計の姿を取り戻せ</p>
 
     <!-- 難易度選択 -->
@@ -25,8 +25,11 @@
     <!-- プレイ時間の表示 -->
     <p id="timer-display">プレイ時間: 00:00:00</p>
 
-    <!-- スコア表示（初期は非表示だがCSSでスタイルは付与、JSで表示制御） -->
+    <!-- スコア表示 -->
     <p id="score-display" style="display: none"></p>
+
+    <!-- ベストスコア表示用要素を追加（初期はdisplay:noneでもOK） -->
+    <p id="best-score-display" style="display: none"></p>
 
     <!-- リセットボタン -->
     <button id="reset-button">リセット</button>
